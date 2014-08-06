@@ -1,6 +1,7 @@
 package it.logostech.wristbandproject.app;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Environment;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,15 +20,13 @@ import android.widget.TextView;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOError;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import it.logostech.wristbandproject.app.model.TagModel;
 import it.logostech.wristbandproject.app.util.DialogResponder;
 
 
@@ -36,6 +37,8 @@ public class MainActivity extends ActionBarActivity implements DialogResponder {
     private TagModel readTag = null;
 
     private static final String savedTagFileName = "_saved_tags.dat";
+
+    private ArrayAdapter<TagModel> mAdapter = null;
 
 
     @Override
@@ -58,11 +61,43 @@ public class MainActivity extends ActionBarActivity implements DialogResponder {
             }
         });
 
+        Button wirelessActivityButton = (Button) findViewById(R.id.wirelessActivityButton);
+        wirelessActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, WirelessActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         this.tagsList = new LinkedList<TagModel>();
-        ListView tagsListView = (ListView) findViewById(R.id.savedTagListView);
-//        tagsListView.setAdapter();
+
         // initialization of the list view
+        ListView tagsListView = (ListView) findViewById(R.id.savedTagListView);
+        tagsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Object clicked = adapterView.getItemAtPosition(i);
+                Log.v("MainActivity", "onItemClick " + clicked.toString());
+                selectedTag = (TagModel) clicked;
+            }
+        });
+
+        final TextView simulationTextView = (TextView) findViewById(R.id.simulationStateText);
+
+        Button startSimulationButton = (Button) findViewById(R.id.startSimulationButton);
+        startSimulationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String id = "None";
+                if (selectedTag != null) {
+                    id = selectedTag.getStringId();
+                }
+                Log.v("Simulation Start Button", "cliked");
+                simulationTextView.setText("Simulating on " + id);
+            }
+        });
     }
 
     @Override
@@ -114,6 +149,13 @@ public class MainActivity extends ActionBarActivity implements DialogResponder {
         }
         Log.v("onResume", "Loaded " + this.tagsList.size() + " tags!");
 
+        TagModel[] tagsArray = new TagModel[this.tagsList.size()];
+        tagsArray = this.tagsList.toArray(tagsArray);
+        ListView tagsListView = (ListView) findViewById(R.id.savedTagListView);
+        this.mAdapter = new ArrayAdapter<TagModel>(
+                this, android.R.layout.simple_list_item_1, tagsArray);
+        tagsListView.setAdapter(mAdapter);
+
     }
 
     @Override
@@ -157,9 +199,9 @@ public class MainActivity extends ActionBarActivity implements DialogResponder {
             int nameArrayLength = dis.readInt();
             byte[] name = new byte[nameArrayLength];
             dis.read(name);
-            String tagName =  new String(name);
+            String tagName = new String(name);
 
-            tags.add(new TagModel(id,tagName));
+            tags.add(new TagModel(id, tagName));
 
         }
         dis.close();

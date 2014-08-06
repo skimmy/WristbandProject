@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
+import it.logostech.wristbandproject.app.model.TagModel;
+
 /**
  * Created by michele.schimd on 04/07/2014.
  */
@@ -44,5 +46,9 @@ public class TagUtility {
             e.printStackTrace();
         }
         return tagModel;
+    }
+
+    public void initHBCService(TagModel emulatedTag, Context ctx) {
+
     }
 }

@@ -8,5 +8,7 @@
     <string name="saveString">Save</string>
     <string name="cancelString">Cancel</string>
     <string name="save_dialog_title">Save Tag?</string>
+    <string name="title_activity_wireless">WirelessActivity</string>
+    <string name="wireless_text">Wireless</string>
 
 </resources>

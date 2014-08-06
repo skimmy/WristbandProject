@@ -6,12 +6,12 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import it.logostech.wristbandproject.app.model.TagModel;
 import it.logostech.wristbandproject.app.util.DialogResponder;
 
 /**

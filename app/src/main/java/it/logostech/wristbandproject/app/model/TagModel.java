@@ -1,4 +1,4 @@
-package it.logostech.wristbandproject.app;
+package it.logostech.wristbandproject.app.model;
 
 import java.math.BigInteger;
 
@@ -38,5 +38,9 @@ public class TagModel {
     public String getStringId() {
         String idString  = (new BigInteger(this.id).toString());;
         return idString;
+    }
+
+    public  String toString() {
+        return this.getStringId();
     }
 }

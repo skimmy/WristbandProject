@@ -25,12 +25,50 @@
             android:id="@+id/loadTagTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
         <Button
 
             android:id="@+id/saveTagIdButton"
             android:text="@string/saveString"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
+
+        <ListView
+            android:id="@+id/savedTagListView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"></ListView>
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/startSimulationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Simulate" />
+            <Button
+                android:id="@+id/stopSimulationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stop"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/simulationStateText"
+            android:text="Simulating on None"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/wirelessActivityButton"
+            android:text="@string/wireless_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 </RelativeLayout>
