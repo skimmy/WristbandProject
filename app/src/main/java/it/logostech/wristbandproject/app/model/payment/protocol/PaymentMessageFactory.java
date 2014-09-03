@@ -1,5 +1,6 @@
 package it.logostech.wristbandproject.app.model.payment.protocol;
 
+import it.logostech.wristbandproject.app.model.payment.PaymentChallenge;
 import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
 
 /**
@@ -38,12 +39,22 @@ public class PaymentMessageFactory {
         return new PaymentRequestCustomer(sender, receiver, details.getTransactionId(), details);
     }
 
-    public static PaymentAuthorizationCustomer createPaymentAuthorizationCustomerMessage() {
-        return null;
+    public static PaymentAuthorizationCustomer createPaymentAuthorizationCustomerMessage(
+            String sender, PaymentRequestCustomer request, PaymentChallenge challenge) {
+        if (request == null || challenge == null || sender == null) {
+            throw new IllegalArgumentException();
+        }
+        return new PaymentAuthorizationCustomer(sender, request.getSenderId(),
+                request.getTransactionId(), request.getPaymentDetails(), challenge);
     }
 
-    public static PaymentAuthorizationMerchant createPaymentAuthorizationMerchantMessage() {
-        return null;
+    public static PaymentAuthorizationMerchant createPaymentAuthorizationMerchantMessage(
+            String sender, PaymentRequestMerchant request, PaymentChallenge challenge) {
+        if (sender == null || request == null || challenge == null) {
+            throw new IllegalArgumentException();
+        }
+        return new PaymentAuthorizationMerchant(sender, request.getSenderId(),
+                request.getTransactionId(), request.getPaymentDetails(), challenge);
     }
 
     public static PaymentOkCustomer createPaymentOkCustomer() {
