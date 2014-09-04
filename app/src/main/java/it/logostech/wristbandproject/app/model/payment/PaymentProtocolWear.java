@@ -43,12 +43,12 @@ public class PaymentProtocolWear extends PaymentProtocolBase {
     public static final int WEAR_STATE_TRANSITION_SUCCESS = 4;
 
     private int status;
-    private String wearId;
+    private String id;
     // TODO: consider substituting with an actual Auth class
     private String authId;
 
     public PaymentProtocolWear(String id, String authId) {
-        this.wearId = id;
+        this.id = id;
         this.authId = authId;
         this.status = WEAR_STATE_IDLE;
     }
@@ -81,7 +81,7 @@ public class PaymentProtocolWear extends PaymentProtocolBase {
         this.status = WEAR_STATE_PAYMENT_ISSUED;
         PaymentRequestCustomer paymentRequest =
                 PaymentMessageFactory.createPaymentRequestCustomerMessage(
-                        this.wearId, this.authId, message);
+                        this.id, this.authId, message);
         this.sendMessageToAuth(paymentRequest);
     }
 
@@ -95,7 +95,7 @@ public class PaymentProtocolWear extends PaymentProtocolBase {
         }
         this.status = WEAR_STATE_PAYMENT_AUTHORIZED;
         PaymentOkCustomer paymentOk = PaymentMessageFactory.createPaymentOkCustomer(
-                this.wearId, message.getPaymentDetails().getGateId(), message.getPaymentDetails(),
+                this.id, message.getPaymentDetails().getGateId(), message.getPaymentDetails(),
                 message.getPaymentChallenge());
         this.sendMessgaeToGate(paymentOk);
     }
@@ -105,7 +105,7 @@ public class PaymentProtocolWear extends PaymentProtocolBase {
         PaymentChallenge challenge = paymentOk.getChallenge();
         PaymentChallengeResolved solvedChallenge = this.solveChallenge(challenge);
         TransitionConfirmedCustomer transitionConfirmed =
-                PaymentMessageFactory.createTransitionConfirmedCustomer(this.wearId,
+                PaymentMessageFactory.createTransitionConfirmedCustomer(this.id,
                 this.authId, paymentOk.getPaymentDetails(), solvedChallenge);
         this.sendMessageToAuth(transitionConfirmed);
     }
