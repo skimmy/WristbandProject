@@ -1,6 +1,11 @@
 package it.logostech.wristbandproject.app.model.payment.protocol;
 
+import android.content.ReceiverCallNotAllowedException;
+
+import java.nio.channels.NonReadableChannelException;
+
 import it.logostech.wristbandproject.app.model.payment.PaymentChallenge;
+import it.logostech.wristbandproject.app.model.payment.PaymentChallengeResolved;
 import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
 
 /**
@@ -57,32 +62,68 @@ public class PaymentMessageFactory {
                 request.getTransactionId(), request.getPaymentDetails(), challenge);
     }
 
-    public static PaymentOkCustomer createPaymentOkCustomer() {
-        return null;
+    public static PaymentOkCustomer createPaymentOkCustomer(
+            String sender, String receiver,
+            PaymentDetails details, PaymentChallengeResolved challengeResolved) {
+        if (sender == null || receiver == null || details == null || challengeResolved == null) {
+            throw new IllegalArgumentException();
+        }
+        return new PaymentOkCustomer(sender, receiver, details.getTransactionId(),
+                details, challengeResolved);
     }
 
-    public static PaymentOkMerchant createPaymentOkMerchant() {
-        return null;
+    public static PaymentOkMerchant createPaymentOkMerchant(
+            String sender, String receiver,
+            PaymentDetails details,  PaymentChallengeResolved challengeResolved) {
+        if (sender == null || receiver == null || details == null || challengeResolved == null) {
+            throw new IllegalArgumentException();
+        }
+        return new PaymentOkMerchant(sender, receiver, details.getTransactionId(),
+                details, challengeResolved);
     }
 
-    public static TransitionConfirmedCustomer createTransitionConfirmedCustomer() {
-        return null;
+    public static TransitionConfirmedCustomer createTransitionConfirmedCustomer(
+            String sender, String receiver,
+            PaymentDetails details, PaymentChallengeResolved challengeResolved) {
+        if (sender == null || receiver == null || details == null) {
+            throw new IllegalArgumentException();
+        }
+        return new TransitionConfirmedCustomer(sender, receiver, details.getTransactionId(),
+                challengeResolved);
     }
 
-    public static TransitionConfirmedMerchant createTransitionConfirmedMerchant() {
-        return null;
+    public static TransitionConfirmedMerchant createTransitionConfirmedMerchant(
+            String sender, String receiver,
+            PaymentDetails details,  PaymentChallengeResolved challengeResolved) {
+        if (sender == null || receiver == null || details == null) {
+            throw new IllegalArgumentException();
+        }
+        return new TransitionConfirmedMerchant(sender, receiver, details.getTransactionId(),
+                challengeResolved);
     }
 
-    public static TransitionSuccessCustomer createTransitionSuccessCustomer() {
-        return null;
+    public static TransitionSuccessCustomer createTransitionSuccessCustomer(
+            String sender, String receiver, PaymentDetails details) {
+        if (sender == null || receiver == null || details == null) {
+            throw new IllegalArgumentException();
+        }
+        return new TransitionSuccessCustomer(sender,  receiver, details.getTransactionId());
     }
 
-    public static TransitionSuccessMerchant createTransitionSuccessMerchant() {
-        return null;
+    public static TransitionSuccessMerchant createTransitionSuccessMerchant(
+            String sender, String receiver, PaymentDetails details) {
+        if (sender == null || receiver == null || details == null) {
+            throw new IllegalArgumentException();
+        }
+        return new TransitionSuccessMerchant(sender,  receiver, details.getTransactionId());
     }
 
-    public static PaymentPerformed createPaymentPerformedMessage() {
-        return null;
+    public static PaymentPerformed createPaymentPerformedMessage(
+            String sender, String receiver, String transaction) {
+        if (sender == null || receiver == null || transaction == null) {
+            throw new IllegalArgumentException();
+        }
+        return new PaymentPerformed(sender, receiver, transaction);
     }
 }
 
