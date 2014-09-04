@@ -1,5 +1,6 @@
 package it.logostech.wristbandproject.app.model.payment.protocol;
 
+import it.logostech.wristbandproject.app.model.payment.PaymentChallenge;
 import it.logostech.wristbandproject.app.model.payment.PaymentChallengeResolved;
 import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
 
@@ -8,10 +9,10 @@ import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
  */
 public class PaymentOk  extends  PaymentMessageBase {
     private PaymentDetails paymentDetails;
-    private PaymentChallengeResolved challengeResolved;
+    private PaymentChallenge challengeResolved;
 
     public PaymentOk(String senderId, String receiverId, String transactionId,
-                     PaymentDetails paymentDetails, PaymentChallengeResolved challengeResolved) {
+                     PaymentDetails paymentDetails, PaymentChallenge challengeResolved) {
         super(senderId, receiverId, transactionId);
         this.paymentDetails = paymentDetails;
         this.challengeResolved = challengeResolved;
@@ -22,7 +23,7 @@ public class PaymentOk  extends  PaymentMessageBase {
         return paymentDetails;
     }
 
-    public PaymentChallengeResolved getChallengeResolved() {
+    public PaymentChallenge getChallenge() {
         return challengeResolved;
     }
 

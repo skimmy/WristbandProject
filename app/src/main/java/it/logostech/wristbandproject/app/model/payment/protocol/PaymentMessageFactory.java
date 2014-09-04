@@ -1,9 +1,5 @@
 package it.logostech.wristbandproject.app.model.payment.protocol;
 
-import android.content.ReceiverCallNotAllowedException;
-
-import java.nio.channels.NonReadableChannelException;
-
 import it.logostech.wristbandproject.app.model.payment.PaymentChallenge;
 import it.logostech.wristbandproject.app.model.payment.PaymentChallengeResolved;
 import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
@@ -21,7 +17,7 @@ public class PaymentMessageFactory {
     }
 
     public static PaymentRequestCustomer createPaymentRequestCustomerMessage(
-            PaymentIssuedMessage issuedMessage, String sender, String receiver) {
+            String sender, String receiver, PaymentIssuedMessage issuedMessage) {
         if (issuedMessage == null || sender == null || receiver == null) {
             throw new IllegalArgumentException();
         }
@@ -64,12 +60,12 @@ public class PaymentMessageFactory {
 
     public static PaymentOkCustomer createPaymentOkCustomer(
             String sender, String receiver,
-            PaymentDetails details, PaymentChallengeResolved challengeResolved) {
-        if (sender == null || receiver == null || details == null || challengeResolved == null) {
+            PaymentDetails details, PaymentChallenge challenge) {
+        if (sender == null || receiver == null || details == null || challenge == null) {
             throw new IllegalArgumentException();
         }
         return new PaymentOkCustomer(sender, receiver, details.getTransactionId(),
-                details, challengeResolved);
+                details, challenge);
     }
 
     public static PaymentOkMerchant createPaymentOkMerchant(

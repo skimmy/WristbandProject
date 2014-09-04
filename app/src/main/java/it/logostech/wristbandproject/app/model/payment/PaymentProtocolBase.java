@@ -1,14 +1,14 @@
 package it.logostech.wristbandproject.app.model.payment;
 
-import java.security.Key;
 import java.util.HashMap;
 
+import it.logostech.wristbandproject.app.model.payment.interfaces.PaymentProtocol;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBase;
 
 /**
  * Created by michele.schimd on 03/09/2014.
  */
-public abstract class PaymentProtocolBase {
+public abstract class PaymentProtocolBase implements PaymentProtocol {
 
     // this map contains all the transactions that are pendind, the
     // key used to map messages is the actual transaction id. Note
@@ -18,18 +18,6 @@ public abstract class PaymentProtocolBase {
     // transaction is started)
     protected HashMap<String, PaymentMessageBase> pendingTransactions
             = new HashMap<String, PaymentMessageBase>();
-
-    /**
-     * Every time a message arrives on the system queue (either from the NFC or
-     * from the secured channel), it is dispatched to this method which based
-     * on the actual implementation, should activate the proper code.
-     * <p/>
-     * This method is set abstract so that each implementation (Gate, Wear or
-     * Auth) can define proper actions for different received messages
-     *
-     * @param message the next message to be processed
-     */
-    public abstract void onMessageReceived(PaymentMessageBase message);
 
     /**
      * Retrieves, but does not remove, the proper message from the internal
