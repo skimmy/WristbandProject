@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="it.logostech.wristbandproject.app" >
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk android:minSdkVersion="19" />
 
     <uses-permission android:name="android.permission.BIND_NFC_SERVICE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,6 +13,7 @@
         android:required="true" />
 
     <uses-feature android:name="android.hardware.wifi" />
+    <uses-feature android:name="android.hardware.FEATURE_NFC_HOST_CARD_EMULATION" />
 
     <application
         android:allowBackup="true"

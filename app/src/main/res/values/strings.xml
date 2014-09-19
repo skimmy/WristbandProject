@@ -10,5 +10,6 @@
     <string name="save_dialog_title">Save Tag?</string>
     <string name="title_activity_wireless">WirelessActivity</string>
     <string name="wireless_text">Wireless</string>
+    <string name="nfcAID">LogosUnipdAID</string>
 
 </resources>
