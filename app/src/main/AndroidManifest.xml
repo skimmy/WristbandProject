@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.BIND_NFC_SERVICE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.NFC" />
 
     <uses-feature
         android:name="android.hardware.nfc"
@@ -51,26 +52,21 @@
                 android:resource="@xml/nfc" />
         </activity>
 
-        <!-- <service -->
-        <!-- android:name=".util.MyHostApduService" -->
-        <!-- android:exported="true" -->
-        <!-- android:permission="android.permission.BIND_NFC_SERVICE"> -->
-
-
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" /> -->
-        <!-- </intent-filter> -->
-
-
-        <!-- <meta-data android:name="android.nfc.cardemulation.host_apdu_service" -->
-        <!-- android:resource="" -->
-
-
-        <!-- </service> -->
         <activity
             android:name="it.logostech.wristbandproject.app.WirelessActivity"
             android:label="@string/title_activity_wireless" >
         </activity>
-    </application>
 
+        <service android:name=".nfc.HostApduService" android:exported="true"
+            android:permission="android.permission.BIND_NFC_SERVICE">
+                <intent-filter>
+                    <action android:name="android.nfc.cardemulayion.action.HOST_APDU_SERVICE" />
+                </intent-filter>
+                <meta-data android:name="android.nfc.cardemulation.host_apdu_service"
+                        android:resource="@xml/apduservice"/>
+
+
+            </service>
+
+    </application>
 </manifest>

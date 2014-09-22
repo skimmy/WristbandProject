@@ -11,5 +11,7 @@
     <string name="title_activity_wireless">WirelessActivity</string>
     <string name="wireless_text">Wireless</string>
     <string name="nfcAID">LogosUnipdAID</string>
+    <string name="servicedesc">Card emulation service</string>
+    <string name="aiddescription">Default Application ID group(s)</string>
 
 </resources>
