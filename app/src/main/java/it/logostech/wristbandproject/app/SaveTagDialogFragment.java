@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import it.logostech.wristbandproject.app.model.TagModel;
 import it.logostech.wristbandproject.app.util.DialogResponder;
+import it.logostech.wristbandproject.app.util.TagUtility;
 
 /**
  * Created by michele.schimd on 11/07/2014.

@@ -1,4 +1,4 @@
-package it.logostech.wristbandproject.app;
+package it.logostech.wristbandproject.app.util;
 
 import android.content.Context;
 import android.util.Log;

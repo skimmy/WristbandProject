@@ -28,6 +28,7 @@ import java.util.List;
 
 import it.logostech.wristbandproject.app.model.TagModel;
 import it.logostech.wristbandproject.app.util.DialogResponder;
+import it.logostech.wristbandproject.app.util.TagUtility;
 
 
 public class MainActivity extends ActionBarActivity implements DialogResponder {
@@ -46,6 +47,44 @@ public class MainActivity extends ActionBarActivity implements DialogResponder {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // --------------------------------------------------------------------------------------
+        // After migration to different activities this code (and few more things) will remain
+        // --------------------------------------------------------------------------------------
+
+        // Start the wireless activity
+        Button wirelessActivityButton = (Button) findViewById(R.id.wirelessActivityButton);
+        wirelessActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, WirelessActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Start the card emulation activity
+        Button cardEmulationAtivityButton = (Button) findViewById(R.id.cardEmulationActivityButton);
+        cardEmulationAtivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CardEmulationActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button cardReaderActivityButton = (Button) findViewById(R.id.cardReaderActivityButton);
+        cardReaderActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CardReaderActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // --------------------------------------------------------------------------------------
+
+
+
+
         Button saveButton = (Button) findViewById(R.id.saveTagIdButton);
 //        saveButton.setOnClickListener();
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -61,14 +100,6 @@ public class MainActivity extends ActionBarActivity implements DialogResponder {
             }
         });
 
-        Button wirelessActivityButton = (Button) findViewById(R.id.wirelessActivityButton);
-        wirelessActivityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, WirelessActivity.class);
-                startActivity(intent);
-            }
-        });
 
 
         this.tagsList = new LinkedList<TagModel>();

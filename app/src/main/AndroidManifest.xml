@@ -12,7 +12,6 @@
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="true" />
-
     <uses-feature android:name="android.hardware.wifi" />
     <uses-feature android:name="android.hardware.FEATURE_NFC_HOST_CARD_EMULATION" />
 
@@ -51,22 +50,32 @@
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc" />
         </activity>
-
         <activity
             android:name="it.logostech.wristbandproject.app.WirelessActivity"
             android:label="@string/title_activity_wireless" >
         </activity>
 
-        <service android:name=".nfc.HostApduService" android:exported="true"
-            android:permission="android.permission.BIND_NFC_SERVICE">
-                <intent-filter>
-                    <action android:name="android.nfc.cardemulayion.action.HOST_APDU_SERVICE" />
-                </intent-filter>
-                <meta-data android:name="android.nfc.cardemulation.host_apdu_service"
-                        android:resource="@xml/apduservice"/>
+        <service
+            android:name="it.logostech.wristbandproject.app.nfc.HostApduService"
+            android:exported="true"
+            android:permission="android.permission.BIND_NFC_SERVICE" >
+            <intent-filter>
+                <action android:name="android.nfc.cardemulayion.action.HOST_APDU_SERVICE" />
+            </intent-filter>
 
+            <meta-data
+                android:name="android.nfc.cardemulation.host_apdu_service"
+                android:resource="@xml/apduservice" />
+        </service>
 
-            </service>
-
+        <activity
+            android:name="it.logostech.wristbandproject.app.CardEmulationActivity"
+            android:label="@string/title_activity_card_emulation" >
+        </activity>
+        <activity
+            android:name="it.logostech.wristbandproject.app.CardReaderActivity"
+            android:label="@string/title_activity_card_reader" >
+        </activity>
     </application>
+
 </manifest>
