@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="it.logostech.wristbandproject.app" >
+    package="it.logostech.wristbandproject.app">
 
     <uses-sdk android:minSdkVersion="19" />
 
@@ -19,46 +19,25 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name="it.logostech.wristbandproject.app.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.nfc.action.TAG_DISCOVERED" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc" />
         </activity>
         <activity
             android:name="it.logostech.wristbandproject.app.WirelessActivity"
-            android:label="@string/title_activity_wireless" >
-        </activity>
+            android:label="@string/title_activity_wireless"></activity>
 
         <service
             android:name="it.logostech.wristbandproject.app.nfc.HostApduService"
             android:exported="true"
-            android:permission="android.permission.BIND_NFC_SERVICE" >
+            android:permission="android.permission.BIND_NFC_SERVICE">
             <intent-filter>
                 <action android:name="android.nfc.cardemulayion.action.HOST_APDU_SERVICE" />
             </intent-filter>
@@ -70,12 +49,30 @@
 
         <activity
             android:name="it.logostech.wristbandproject.app.CardEmulationActivity"
-            android:label="@string/title_activity_card_emulation" >
-        </activity>
+            android:label="@string/title_activity_card_emulation"></activity>
+
+        <!-- CARD READER ACTIVITY -->
         <activity
             android:name="it.logostech.wristbandproject.app.CardReaderActivity"
-            android:label="@string/title_activity_card_reader" >
+            android:label="@string/title_activity_card_reader">
+            <!-- NFC intent filters -->
+            <!-- This should be attributes of the proper activity
+             (i.e. CardReaderActivity) -->
+            <intent-filter>
+                <action android:name="android.nfc.action.TAG_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
