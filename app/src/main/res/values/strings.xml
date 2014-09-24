@@ -23,6 +23,7 @@
     <!-- Card Reader Activity strings -->
     <string name="title_activity_card_reader">CardReaderActivity</string>
     <string name="card_reader_text">Card Reader</string>
+    <string name="last_tag_discovered_text">Last Tag</string>
 
     <!-- NFC subsystem strings -->
     <string name="nfcAID">LogosUnipdAID</string>

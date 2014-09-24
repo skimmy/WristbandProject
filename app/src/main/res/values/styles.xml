@@ -11,4 +11,9 @@
         <item name="android:paddingBottom">5sp</item>
         <item name="android:paddingTop">5sp</item>
     </style>
+
+    <style name="TextViewBold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

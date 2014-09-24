@@ -3,9 +3,14 @@ package it.logostech.wristbandproject.app;
 import android.app.Activity;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import it.logostech.wristbandproject.app.nfc.TagReaderCallback;
 
@@ -53,9 +58,23 @@ public class CardReaderActivity extends Activity {
         // good place to check what NFC subsystem has discovered.
         super.onResume();
         Log.v(TAG, "onResume");
+
         // Note that the information about discovered tag(s) are contained in
         // the intent used to resume the activity.
         String action = getIntent().getAction();
+
+        // enable all
+        Handler handler = (new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg != null && msg.obj != null) {
+                    TextView latestTagView = (TextView) findViewById(R.id.cardReaderLastTagText);
+                    latestTagView.setText((String) msg.obj);
+                }
+            }
+        });
+
+        this.readerCallback.setCardReaderHandler(handler);
 
         // enables and sets the foreground reader callback
         // this flags are recommended for communication with Android HCE (see
