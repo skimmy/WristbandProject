@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import it.logostech.wristbandproject.app.model.TagModel;
+import it.logostech.wristbandproject.app.nfc.NfcUtil;
 import it.logostech.wristbandproject.app.util.DialogResponder;
 import it.logostech.wristbandproject.app.util.TagUtility;
 
@@ -38,6 +39,7 @@ public class MainActivity extends ActionBarActivity implements DialogResponder {
     private TagModel readTag = null;
 
     private static final String savedTagFileName = "_saved_tags.dat";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private ArrayAdapter<TagModel> mAdapter = null;
 
@@ -84,9 +86,13 @@ public class MainActivity extends ActionBarActivity implements DialogResponder {
 
 
 
+        // Temporary debug code to check hdpu service
+        String aid = getResources().getString(R.string.nfcAID);
+       //NfcUtil.setDefaultForAid(aid, this);
+        Log.v(TAG, "Default: " + NfcUtil.isDefaultServiceForAid(aid, this));
+
 
         Button saveButton = (Button) findViewById(R.id.saveTagIdButton);
-//        saveButton.setOnClickListener();
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

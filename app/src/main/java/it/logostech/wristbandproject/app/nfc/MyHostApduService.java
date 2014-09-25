@@ -1,6 +1,5 @@
 package it.logostech.wristbandproject.app.nfc;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -12,14 +11,15 @@ import it.logostech.wristbandproject.app.util.TypeUtil;
 /**
  * Created by michele.schimd on 19/09/2014.
  */
-public class HostApduService extends android.nfc.cardemulation.HostApduService {
+public class MyHostApduService extends android.nfc.cardemulation.HostApduService {
 
-    private static final String TAG = HostApduService.class.getSimpleName();
+    private static final String TAG = MyHostApduService.class.getSimpleName();
 
-    private String aid = "FAFAFAFA";
+    private String aid = "F0010203040506";
 
     @Override
     public void onCreate() {
+        Log.v(TAG, "onCreate");
         super.onCreate();
         this.aid = getResources().getString(R.string.nfcAID);
     }
@@ -31,7 +31,7 @@ public class HostApduService extends android.nfc.cardemulation.HostApduService {
         if (Arrays.equals(bytes, aidSelect)) {
             Log.v(TAG, "Received SELECT for " + this.aid);
             byte payload[] = {'O', 'k'};
-            TypeUtil.concatArrays(payload, NfcUtil.SELECT_OK_SW);
+            return TypeUtil.concatArrays(payload, NfcUtil.SELECT_OK_SW);
         }
         Log.v(TAG, "Received SELECT for unsupported aid");
         return NfcUtil.UNKNOWN_CMD_SW;

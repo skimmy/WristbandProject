@@ -79,6 +79,7 @@ public class TagReaderCallback implements NfcAdapter.ReaderCallback {
                 if (Arrays.equals(NfcUtil.SELECT_OK_SW, statusWord)) {
                     Log.v(TAG, "AID " + this.aid + " selected");
                     byte[] payload = Arrays.copyOf(result, resultLength - 2);
+                    Log.v(TAG, "Response payload was: " + (new String(payload)));
                 }
             } catch (IOException e) {
                 e.printStackTrace();

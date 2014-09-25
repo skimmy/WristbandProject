@@ -1,5 +1,11 @@
 package it.logostech.wristbandproject.app.nfc;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.nfc.NfcAdapter;
+import android.nfc.cardemulation.CardEmulation;
+
 import it.logostech.wristbandproject.app.util.TypeUtil;
 
 /**
@@ -25,6 +31,16 @@ public class NfcUtil {
         // Format: [CLASS | INSTRUCTION | PARAMETER 1 | PARAMETER 2 | LENGTH | DATA]
         return TypeUtil.hexStringToByteArray(SELECT_APDU_HEADER +
                 String.format("%02X", aid.length() / 2) + aid);
+    }
+
+    public static boolean isDefaultServiceForAid(String aid, Context ctx) {
+        return CardEmulation.getInstance(NfcAdapter.getDefaultAdapter(ctx)).
+                isDefaultServiceForAid(new ComponentName(ctx, MyHostApduService.class), aid);
+    }
+
+    public static void setDefaultForAid(String aid, Context ctx) {
+        Intent intent = new Intent(CardEmulation.ACTION_CHANGE_DEFAULT);
+        ctx.startActivity(intent);
     }
 
 }

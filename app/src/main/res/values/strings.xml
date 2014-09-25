@@ -25,7 +25,7 @@
     <string name="last_tag_discovered_text">Last Tag</string>
 
     <!-- NFC subsystem strings -->
-    <string name="nfcAID">FAFAFAFA</string>
+    <string name="nfcAID">F0010203040506</string>
     <string name="servicedesc">Card emulation service</string>
     <string name="aiddescription">Default Application ID group(s)</string>
 

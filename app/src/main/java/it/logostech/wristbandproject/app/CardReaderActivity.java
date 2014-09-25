@@ -24,7 +24,7 @@ public class CardReaderActivity extends Activity {
     TagReaderCallback readerCallback = null;
 
     // this is the (defualt) application id for Nfc communications
-    private String aid = "FAFAFAFA";
+    private String aid = "F0010203040506";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
