@@ -34,12 +34,15 @@
             android:name="it.logostech.wristbandproject.app.WirelessActivity"
             android:label="@string/title_activity_wireless"></activity>
 
+        <!-- CARD EMULATION SERVICE -->
+        <!-- Definition of the service for card emulation -->
         <service
             android:name="it.logostech.wristbandproject.app.nfc.HostApduService"
             android:exported="true"
             android:permission="android.permission.BIND_NFC_SERVICE">
             <intent-filter>
                 <action android:name="android.nfc.cardemulayion.action.HOST_APDU_SERVICE" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <meta-data
@@ -47,6 +50,9 @@
                 android:resource="@xml/apduservice" />
         </service>
 
+        <!-- CARD EMULATION ACTIVITY -->
+        <!-- Card emulation is server based, this activity is used to start, stop and
+             monitor such service -->
         <activity
             android:name="it.logostech.wristbandproject.app.CardEmulationActivity"
             android:label="@string/title_activity_card_emulation"></activity>

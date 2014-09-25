@@ -8,6 +8,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -21,6 +23,9 @@ public class CardReaderActivity extends Activity {
     // this callback is called while activity is in foreground
     TagReaderCallback readerCallback = null;
 
+    // this is the (defualt) application id for Nfc communications
+    private String aid = "FAFAFAFA";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // default stuff
@@ -29,7 +34,7 @@ public class CardReaderActivity extends Activity {
 
         // create reader callback for NFC (registration will take place during
         // onResume and de-registration during onPause)
-        this.readerCallback = new TagReaderCallback();
+        this.readerCallback = new TagReaderCallback(aid);
     }
 
 

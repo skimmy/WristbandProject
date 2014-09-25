@@ -15,7 +15,6 @@
     <string name="title_activity_wireless">WirelessActivity</string>
     <string name="wireless_text">Wireless</string>
 
-
     <!-- Card Emulation Activity strings -->
     <string name="title_activity_card_emulation">CardEmulationActivity</string>
     <string name="card_emulation_text">Card Emulation</string>
@@ -26,7 +25,7 @@
     <string name="last_tag_discovered_text">Last Tag</string>
 
     <!-- NFC subsystem strings -->
-    <string name="nfcAID">LogosUnipdAID</string>
+    <string name="nfcAID">FAFAFAFA</string>
     <string name="servicedesc">Card emulation service</string>
     <string name="aiddescription">Default Application ID group(s)</string>
 
