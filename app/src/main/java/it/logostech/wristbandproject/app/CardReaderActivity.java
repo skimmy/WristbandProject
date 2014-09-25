@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import it.logostech.wristbandproject.app.deamons.PaymentGateDaemon;
 import it.logostech.wristbandproject.app.nfc.TagReaderCallback;
 
 public class CardReaderActivity extends Activity {
@@ -23,7 +24,7 @@ public class CardReaderActivity extends Activity {
     // this callback is called while activity is in foreground
     TagReaderCallback readerCallback = null;
 
-    // this is the (defualt) application id for Nfc communications
+    // this is the (default) application id for Nfc communications
     private String aid = "F0010203040506";
 
     @Override
@@ -64,9 +65,8 @@ public class CardReaderActivity extends Activity {
         super.onResume();
         Log.v(TAG, "onResume");
 
-        // Note that the information about discovered tag(s) are contained in
-        // the intent used to resume the activity.
-        String action = getIntent().getAction();
+        // Retrieve the current device id and set it on the PaymentGateDaemon
+        PaymentGateDaemon.deviceNfcId = NfcAdapter.EXTRA_ID;
 
         // enable all
         Handler handler = (new Handler() {

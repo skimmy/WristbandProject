@@ -6,13 +6,11 @@ import android.nfc.tech.IsoDep;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Objects;
 
-import it.logostech.wristbandproject.app.deamons.PaymentSystemDaemon;
+import it.logostech.wristbandproject.app.deamons.PaymentGateDaemon;
 import it.logostech.wristbandproject.app.model.TagModel;
 import it.logostech.wristbandproject.app.util.TypeUtil;
 
@@ -54,17 +52,8 @@ public class TagReaderCallback implements NfcAdapter.ReaderCallback {
             this.cardReaderHandler.sendMessage(msg);
         }
 
-        // from now on the software should only use TagModel object, unless
-        // specifically required differently.
-        TagModel tagModel = new TagModel(tag);
-
-        // At this point we simply send the tag to the PaymentSystemDaemon so
-        // that it can be processed.
-        PaymentSystemDaemon.tagDiscovered(tagModel);
-
         // start the communication protocol (this part is almost a cut-and-paste
         // from the android card reader sample)
-        // TODO: should this go inside the daemon?
         IsoDep isoDep = IsoDep.get(tag);
         if (tag != null) {
             // First we need to send the card the AID
@@ -79,7 +68,19 @@ public class TagReaderCallback implements NfcAdapter.ReaderCallback {
                 if (Arrays.equals(NfcUtil.SELECT_OK_SW, statusWord)) {
                     Log.v(TAG, "AID " + this.aid + " selected");
                     byte[] payload = Arrays.copyOf(result, resultLength - 2);
-                    Log.v(TAG, "Response payload was: " + (new String(payload)));
+                    String selectAidResponsePayload = new String(payload);
+                    Log.v(TAG, "Response payload was: " + selectAidResponsePayload);
+                    // From now on we have verified that the remote 'card' conforms
+                    // to the specified AID we can therefore
+                    // TODO: here we can invoke the daemon
+
+                    // from now on the software should only use TagModel object, unless
+                    // specifically required differently.
+                    TagModel tagModel = new TagModel(tag);
+
+                    // At this point we simply send the tag to the PaymentSystemDaemon so
+                    // that it can be processed.
+                    PaymentGateDaemon.tagDiscovered(tagModel, isoDep);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

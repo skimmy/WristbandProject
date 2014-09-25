@@ -49,6 +49,16 @@ public class MainActivity extends ActionBarActivity implements DialogResponder {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+        // check (eventually forcing) default service for AID
+        String aid = getResources().getString(R.string.nfcAID);
+        if (!NfcUtil.isDefaultServiceForAid(aid, this)) {
+            NfcUtil.setDefaultForAid(aid, this);
+        }
+
+
+
         // --------------------------------------------------------------------------------------
         // After migration to different activities this code (and few more things) will remain
         // --------------------------------------------------------------------------------------
@@ -85,13 +95,6 @@ public class MainActivity extends ActionBarActivity implements DialogResponder {
         // --------------------------------------------------------------------------------------
 
 
-
-        // Temporary debug code to check hdpu service
-        String aid = getResources().getString(R.string.nfcAID);
-       //NfcUtil.setDefaultForAid(aid, this);
-        Log.v(TAG, "Default: " + NfcUtil.isDefaultServiceForAid(aid, this));
-
-
         Button saveButton = (Button) findViewById(R.id.saveTagIdButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +108,6 @@ public class MainActivity extends ActionBarActivity implements DialogResponder {
                 }
             }
         });
-
 
 
         this.tagsList = new LinkedList<TagModel>();
