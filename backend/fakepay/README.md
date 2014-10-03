@@ -1,10 +1,10 @@
-FAKE PAY
+Fake Pay
 ========
 
 This is a fake backend system to simulate a trusted backend server able to
 authenticate devices willing to perform a contactless payment with each other.
 
-IMPLEMENTATION
+Implementation
 --------------
 
 The service is implemented using
