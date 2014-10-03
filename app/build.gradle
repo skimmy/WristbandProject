@@ -21,4 +21,14 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:19.+'
+    // The following client libraries make HTTP/JSON on Android easier.
+
+    // Android extensions for Google HTTP Client.
+    compile(group: 'com.google.http-client', name: 'google-http-client-android',
+            version: '1.17.0-rc') {
+        exclude(group: 'com.google.android', module: 'android')
+    }
+
+    // This is used by the Google HTTP client library.
+    compile(group: 'com.google.guava', name: 'guava', version: '14.0.+')
 }
