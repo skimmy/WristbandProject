@@ -9,6 +9,9 @@ from protorpc import messages
 from protorpc import message_types
 from protorpc import remote
 
+import payment_messages as msg
+import request_parser as parser
+
 package ='FakePay'
 
 class Greeting(messages.Message):
@@ -45,4 +48,27 @@ class HelloFakePayAPI(remote.Service):
         except(IndexError, TypeError):
             raise endpoints.NotFoundException("Greeting %s not found." % (request.id))
 
-APPLICATION = endpoints.api_server([HelloFakePayAPI])
+"""This is the main service API for the payment system. It is developed to conform
+to the custom payment protocol designed for the WristbandProject."""
+@endpoints.api(name="paymentremote", version="0.1")
+class PaymentRemoteService(remote.Service):
+    # PaymentRequestMerchant: the merchante (i.e. gate) issues a pyment to the 
+    #    authority (i.e. the backend payment service, a.k.a. this service)
+    @endpoints.method(msg.PaymentDetailMessage, msg.ReplyMessage,
+                      path="payreqmerch", http_method="GET",
+                      name="paymentrequestmerchant")
+    def payment_request_merchant(self, request):
+        # upon receiving a message we should
+        # 1. Check message validity (ids, amount, ...)
+        returnCode,  returnText = parser.parsePaymentRequestMerchant(request)
+        # 2a. create a new transaction or...
+        replyMsg = msg.ReplyMessage(code=returnCode, text=returnText)
+        # 2b. ...retrieve if it is already activated (but this may be an error!)
+
+        # 3. Store the new transaction
+
+        # 4. Create the reply
+        return replyMsg
+
+# run all the services
+APPLICATION = endpoints.api_server([HelloFakePayAPI, PaymentRemoteService])
