@@ -3,6 +3,8 @@ for (safely) reading and writing to the data storer using datastorer helper
 functions"""
 
 import payment_messages as msg
+import payment_model as model
+import datastore_helper as ds
 
 # Return codes
 RET_CODE_OK = 0
@@ -16,10 +18,12 @@ returnStrings = ["Ok", "Generic Error", "Duplicated ID for the same transaction"
                  "Unrecognized transaction ID"]
 
 def parsePaymentRequestMerchant(paymentDetails):
-    # First check if the corresponding transaction has alredy been stored
-    newTransaction = True
+    # Get the model object from the GCE message object
+    detailModel = model.PaymentDetail(paymentDetails)
+    transactionInfo = ds.retrieveTransactionInfo(detailModel.transId)
+    # Check if the corresponding transaction has alredy been stored
     # if not we need to create a new transaction
-    if newTransaction:
+    if transactionInfo == None:
         retCode = RET_CODE_OK
         return [retCode, returnStrings[retCode]]
     else:
