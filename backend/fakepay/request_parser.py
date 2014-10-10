@@ -10,12 +10,16 @@ import datastore_helper as ds
 RET_CODE_OK = 0
 RET_CODE_GENERIC_ERROR = 1
 
-RET_CODE_DUPLICATE_TID = 2
-RET_CODE_SPURIOUS = 3
+RET_CODE_TRANS_FOUND = 2
+RET_CODE_TRANS_NOT_FOUND = 3
 
 # Strings associated with return codes
-returnStrings = ["Ok", "Generic Error", "Duplicated ID for the same transaction",
-                 "Unrecognized transaction ID"]
+returnStrings = ["Ok", "Generic Error", "Found transaction",
+                 "Transaction not found"]
+
+def createNewTransaction(paymentDetails):
+    """Creates a new transaction to be inserted in the datastore"""
+    pass
 
 def parsePaymentRequestMerchant(paymentDetails):
     # Get the model object from the GCE message object
@@ -24,16 +28,10 @@ def parsePaymentRequestMerchant(paymentDetails):
     # Check if the corresponding transaction has alredy been stored
     # if not we need to create a new transaction
     if transactionInfo == None:
-        retCode = RET_CODE_OK
+        retCode = RET_CODE_TRANS_NOT_FOUND
         return [retCode, returnStrings[retCode]]
     else:
-        # if it is alredy present one of the 3 following things can be happened
-        # 1 - We have received the customer request for the same transaction
-        
-        # 2 - We have received a second request for the same transaction
-        
-        # 3 - We have received a 'spurious' transaction id (either error or attack)
-        pass
-        
+        retCode = RET_CODE_TRANS_FOUND
+        return [retCode, returnStrings[retCode]]        
     # Something unexpected happened and therefore we return a generic error
     return [RET_CODE_GENERIC_ERROR, returnStrings[RET_CODE_GENERIC_ERROR]]

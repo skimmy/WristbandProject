@@ -54,15 +54,23 @@ to the custom payment protocol designed for the WristbandProject."""
 class PaymentRemoteService(remote.Service):
     # PaymentRequestMerchant: the merchante (i.e. gate) issues a pyment to the 
     #    authority (i.e. the backend payment service, a.k.a. this service)
-    @endpoints.method(msg.PaymentDetailMessage, msg.ReplyMessage,
+    @endpoints.method(msg.PaymentDetailMessage, msg.PaymentAuthorizedMerchantMessage,
                       path="payreqmerch", http_method="GET",
                       name="paymentrequestmerchant")
     def payment_request_merchant(self, request):
         # upon receiving a message we should
         # 1. Check message validity (ids, amount, ...)
         returnCode,  returnText = parser.parsePaymentRequestMerchant(request)
+        replyInfo = msg.ReplyInfoMessage(code=returnCode, text=returnText)
+        if returnCode == parser.RET_CODE_TRANS_FOUND:
+            pass
+        elif returnCode == parser.RET_CODE_TRANS_NOT_FOUND:
+            pass
+        elif returnCode == parser.RET_CODE_GENERIC_ERROR:
+            pass
         # 2a. create a new transaction or...
-        replyMsg = msg.ReplyMessage(code=returnCode, text=returnText)
+        replyMsg = msg.PaymentAuthorizedMerchantMessage(
+            details=request, authorized=True, info=replyInfo)
         # 2b. ...retrieve if it is already activated (but this may be an error!)
 
         # 3. Store the new transaction
