@@ -19,7 +19,9 @@ returnStrings = ["Ok", "Generic Error", "Found transaction",
 
 def createNewTransaction(paymentDetails):
     """Creates a new transaction to be inserted in the datastore"""
-    pass
+    detailModel = model.PaymentDetail(paymentDetails)
+    ds.insertNewTransaction(detailModel.toNdbModel())  
+    
 
 def parsePaymentRequestMerchant(paymentDetails):
     # Get the model object from the GCE message object
@@ -28,10 +30,14 @@ def parsePaymentRequestMerchant(paymentDetails):
     # Check if the corresponding transaction has alredy been stored
     # if not we need to create a new transaction
     if transactionInfo == None:
+        # register the merchant request and insert the a new transaction
+        detailModel.transState = model.TS_MERCH_REQUEST
+        transactionInfo = detailModel.toNdbModel()
+        ds.insertNewTransaction(transactionInfo)
         retCode = RET_CODE_TRANS_NOT_FOUND
-        return [retCode, returnStrings[retCode]]
-    else:
-        retCode = RET_CODE_TRANS_FOUND
-        return [retCode, returnStrings[retCode]]        
+        return [retCode, returnStrings[retCode], detailModel]
+    else:        
+        retCode = RET_CODE_TRANS_FOUND        
+        return [retCode, returnStrings[retCode], model.PaymentDetail.fromNdbModel(transactionInfo)]
     # Something unexpected happened and therefore we return a generic error
     return [RET_CODE_GENERIC_ERROR, returnStrings[RET_CODE_GENERIC_ERROR]]

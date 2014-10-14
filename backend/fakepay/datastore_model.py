@@ -11,3 +11,4 @@ class PaymentDetailDatastore(ndb.Model):
     wearId = ndb.StringProperty()
     amount = ndb.FloatProperty()
     purchaseType = ndb.IntegerProperty()
+    transactionState = ndb.IntegerProperty()

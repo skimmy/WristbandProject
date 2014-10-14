@@ -60,7 +60,7 @@ class PaymentRemoteService(remote.Service):
     def payment_request_merchant(self, request):
         # upon receiving a message we should
         # 1. Check message validity (ids, amount, ...)
-        returnCode,  returnText = parser.parsePaymentRequestMerchant(request)
+        [returnCode, returnText, newDetails]  = parser.parsePaymentRequestMerchant(request)
         replyInfo = msg.ReplyInfoMessage(code=returnCode, text=returnText)
         if returnCode == parser.RET_CODE_TRANS_FOUND:
             pass
