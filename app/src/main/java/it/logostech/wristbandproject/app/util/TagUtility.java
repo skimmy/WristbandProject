@@ -15,6 +15,10 @@ import it.logostech.wristbandproject.app.model.TagModel;
  * Created by michele.schimd on 04/07/2014.
  */
 public class TagUtility {
+
+    // enforce non instantiability of this util class
+    private TagUtility() { }
+
     public static void saveTagToFile(TagModel tag, String saveName, Context ctx) {
         try {
             FileOutputStream fos = ctx.openFileOutput("_nfc_tag_" + saveName, Context.MODE_PRIVATE);
