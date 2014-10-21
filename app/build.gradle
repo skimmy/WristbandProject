@@ -67,7 +67,7 @@ dependencies {
     }
 
     // This is used by the Google HTTP client library.
-    compile 'com.google.guava:guava:14.0.+'
+//    compile 'com.google.guava:guava:14.0.+'
 
     compile ([group: 'com.appspot.wristband_unipd', name: 'paymentremote', version: '0.1-1.19.0-SNAPSHOT'])
 }

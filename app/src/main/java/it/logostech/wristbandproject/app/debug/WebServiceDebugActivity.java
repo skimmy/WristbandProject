@@ -1,6 +1,7 @@
 package it.logostech.wristbandproject.app.debug;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +14,7 @@ import android.widget.Spinner;
 
 import it.logostech.wristbandproject.app.R;
 import it.logostech.wristbandproject.app.backend.RemotePaymentWS;
+import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
 
 
 public class WebServiceDebugActivity extends Activity implements AdapterView.OnItemSelectedListener {
@@ -38,6 +40,7 @@ public class WebServiceDebugActivity extends Activity implements AdapterView.OnI
             @Override
             public void onClick(View view) {
                 Log.v(TAG, "WS Send Button Clicked");
+                parseAndCallMethod();
             }
         });
 
@@ -93,7 +96,18 @@ public class WebServiceDebugActivity extends Activity implements AdapterView.OnI
      *  </ol>
      */
     private void parseAndCallMethod() {
-        // TODO: provide an async mechanism for reply waiting and parsing
+        PaymentDetails.Builder builder = new PaymentDetails.Builder("123", "W", "G");
+        builder.amount(199.99).purchaseType(PaymentDetails.PURCHASE_TYPE_SERVICE);
+        PaymentDetails payDetails = builder.build();
 
+        (new WSAsyncTask()).execute(payDetails);
+    }
+
+    private class WSAsyncTask extends AsyncTask<Object, Void, Object> {
+        @Override
+        protected Object doInBackground(Object... objects) {
+            RemotePaymentWS.paymentRequestMerchant((PaymentDetails) objects[0]);
+            return null;
+        }
     }
 }
