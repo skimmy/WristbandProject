@@ -6,6 +6,10 @@ import java.util.Arrays;
  * Created by michele.schimd on 22/09/2014.
  */
 public class TypeUtil {
+
+    // Enforce non instantiability of this util class
+    private TypeUtil() { }
+
     /**
      * Converts the input array into an hexadecimal string. This method is
      * useful for debugging purpose since it allows to have a visual
@@ -24,7 +28,6 @@ public class TypeUtil {
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
         return new String(hexChars);
-//        return new BigInteger(array).toString();
     }
 
     public static byte[] hexStringToByteArray(String s) {
