@@ -1,5 +1,7 @@
 package it.logostech.wristbandproject.app.model.payment;
 
+import com.appspot.wristband_unipd.paymentremote.model.PaymentMessagesPaymentDetailMessage;
+
 /**
  *  This class represents the information (<em>i.e.</em> details) about a payment
  *  transaction.
@@ -26,6 +28,28 @@ public class PaymentDetails {
         Builder builder = new Builder(other.transactionId, other.wearId, other.gateId);
         builder.amount(other.amount)
                 .purchaseType(other.purchaseType);
+        return builder.build();
+    }
+
+    /**
+     * Factory method to create a {@link it.logostech.wristbandproject.app.model.payment.PaymentDetails}
+     * instance from a {@link com.appspot.wristband_unipd.paymentremote.model.PaymentMessagesPaymentDetailMessage}
+     * (from the remote service auto-generated API).
+     * <p>
+     *     <b>Note.</b> It is not a good practice ti mix the remote service auto-generated
+     *     classes with the model not only because this breaks the design pattern, but also
+     *     because every time the remote API changes, there is the possibility for the
+     *     corresponding class to change as well (which will, in turn, force changes all over
+     *     the code). For prototyping reasons this <i>anti-pattern</i> is here accepted,
+     *     but it shouldn't be used in actual release code.
+     * </p>
+     *
+     * @param msg the web server message
+     * @return a payment detail from the passed passed message
+     */
+    public static PaymentDetails fromPaymentDetailMessage(PaymentMessagesPaymentDetailMessage msg) {
+        Builder builder = new Builder(msg.getTransactionId(), msg.getWearId(), msg.getGateId());
+        builder.amount(msg.getAmount()).purchaseType(msg.getPurchaseType().intValue());
         return builder.build();
     }
 
