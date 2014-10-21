@@ -39,7 +39,7 @@
     <string name="servicedesc">Card emulation service</string>
     <string name="aiddescription">Default Application ID group(s)</string>
     <string name="title_activity_web_service_debug">WebServiceDebugActivity</string>
-
+    <string name="service_reply_string">Service Reply</string>
 
 
 </resources>

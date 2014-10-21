@@ -23,12 +23,20 @@
         android:src="@drawable/ic_web_server"/>
 
     <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@color/dark_grey"
+        style="@style/GuiDivider"
         android:layout_below="@id/wsSendRequestButton" />
+
+    <View
+        android:id="@+id/bottomDivider"
+        style="@style/GuiDivider"
+        android:layout_alignParentBottom="true"/>
+
+    <TextView
+        android:id="@+id/serviceReplyMessageTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomDivider"
+        android:text="@string/service_reply_string"/>
+
 
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import it.logostech.wristbandproject.app.R;
 import it.logostech.wristbandproject.app.backend.RemotePaymentWS;
@@ -106,8 +107,15 @@ public class WebServiceDebugActivity extends Activity implements AdapterView.OnI
     private class WSAsyncTask extends AsyncTask<Object, Void, Object> {
         @Override
         protected Object doInBackground(Object... objects) {
-            RemotePaymentWS.paymentRequestMerchant((PaymentDetails) objects[0]);
-            return null;
+            Object serviceReplyMsg =  RemotePaymentWS.paymentRequestMerchant((PaymentDetails) objects[0]);
+            return serviceReplyMsg;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            TextView serviceReply = (TextView) findViewById(R.id.serviceReplyMessageTextView);
+            // TODO: At the moment the returned Object is null until RemotePaymentWS changes
+//            serviceReply.setText(o.toString());
         }
     }
 }

@@ -8,6 +8,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import java.io.IOException;
 
 import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
+import it.logostech.wristbandproject.app.model.payment.protocol.PaymentAuthorizationMerchant;
 
 /**
  * Created by Michele Schimd on 10/21/14.
@@ -26,7 +27,7 @@ public class RemotePaymentWS {
         service = null;
     }
 
-    public static PaymentDetails paymentRequestMerchant(PaymentDetails details) {
+    public static PaymentAuthorizationMerchant paymentRequestMerchant(PaymentDetails details) {
         PaymentMessagesPaymentAuthorizedMerchantMessage authMsg = null;
         try {
             authMsg = service.paymentrequestmerchant(details.getWearId(), details.getGateId(),
