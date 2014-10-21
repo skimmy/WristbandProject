@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import it.logostech.wristbandproject.app.R;
+import it.logostech.wristbandproject.app.backend.RemotePaymentWS;
 
 
 public class WebServiceDebugActivity extends Activity implements AdapterView.OnItemSelectedListener {
@@ -42,6 +43,17 @@ public class WebServiceDebugActivity extends Activity implements AdapterView.OnI
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        RemotePaymentWS.initService();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        RemotePaymentWS.freeService();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -69,6 +81,19 @@ public class WebServiceDebugActivity extends Activity implements AdapterView.OnI
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    /** This method is called when the 'send request' button is pressed.
+     *  The method performs two task
+     *  <ol>
+     *  <li> It parses the information on the spinner and parameters to construct
+     *  a proper request</li>
+     *  <li>Sends the request and waits for the answer</li>
+     *  </ol>
+     */
+    private void parseAndCallMethod() {
+        // TODO: provide an async mechanism for reply waiting and parsing
 
     }
 }

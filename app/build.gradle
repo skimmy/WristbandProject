@@ -1,4 +1,21 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.+'
+    }
+}
+
 apply plugin: 'android'
+
+repositories {
+    maven {
+        url 'http://google-api-client-libraries.appspot.com/mavenrepo'
+    }
+    mavenCentral()
+    mavenLocal()
+}
 
 android {
     compileSdkVersion 19
@@ -19,36 +36,38 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:19.+'
-    // The following client libraries make HTTP/JSON on Android easier.
 
+    // Play Services will validate the application prior to allowing OAuth2 access.
+    //compile(group: 'com.google.android.gms', name: 'play-services', version: 'latest')
+
+    // The following client libraries make HTTP/JSON on Android easier.
     // Add the Google API client library.
-    compile(group: 'com.google.api-client', name: 'google-api-client', version: '1.17.0-rc') {
+    compile('com.google.api-client:google-api-client:1.17.0-rc') {
         // Exclude artifacts that the Android SDK/Runtime provides.
         exclude(group: 'xpp3', module: 'xpp3')
         exclude(group: 'org.apache.httpcomponents', module: 'httpclient')
         exclude(group: 'junit', module: 'junit')
         exclude(group: 'com.google.android', module: 'android')
     }
-
     // Add the Android extensions for the Google API client library.
     // This will automatically include play services as long as you have download that library
     // from the Android SDK manager.
     // Add the Android extensions for the Google API client library.
-    compile(group: 'com.google.api-client', name: 'google-api-client-android',
-            version: '1.17.0-rc')
-            {
-                // Exclude play services, since we're not using this yet.
-                exclude(group: 'com.google.android.google-play-services', module: 'google-play-services')
-            }
-
+    compile('com.google.api-client:google-api-client-android:1.17.0-rc') {
+        // Exclude play services, since we're not using this yet.
+        exclude(group: 'com.google.android.google-play-services', module: 'google-play-services')
+    }
     // Android extensions for Google HTTP Client.
-    compile(group: 'com.google.http-client', name: 'google-http-client-android',
-            version: '1.17.0-rc') {
+    compile('com.google.http-client:google-http-client-android:1.17.0-rc') {
         exclude(group: 'com.google.android', module: 'android')
+    }
+    compile ('com.google.http-client:google-http-client-gson:1.17.0-rc') {
+        exclude module: 'httpclient'
     }
 
     // This is used by the Google HTTP client library.
-    compile(group: 'com.google.guava', name: 'guava', version: '14.0.+')
+    compile 'com.google.guava:guava:14.0.+'
+
+    compile ([group: 'com.appspot.wristband_unipd', name: 'paymentremote', version: '0.1-1.19.0-SNAPSHOT'])
 }
