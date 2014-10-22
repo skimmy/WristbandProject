@@ -1,8 +1,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="it.logostech.wristbandproject.app.debug.WebServiceDebugActivity" >
+
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never" />
+
+    <!-- This group contains debugging menu items -->
+    <group android:id="@+id/group_menu_ws_debug"
+        android:visible="true">
+        <item android:id="@+id/action_ws_log"
+            android:icon="@drawable/ic_debu_log"
+            android:title="Log"
+            android:orderInCategory="10"
+            android:showAsAction="ifRoom">
+            <menu>
+                <item
+                    android:id="@+id/action_ws_log_errors"
+                    android:title="Errors" />
+            </menu>
+        </item>
+    </group>
 </menu>

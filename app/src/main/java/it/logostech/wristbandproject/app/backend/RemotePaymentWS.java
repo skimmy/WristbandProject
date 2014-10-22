@@ -30,9 +30,9 @@ public class RemotePaymentWS {
     public static PaymentAuthorizationMerchant paymentRequestMerchant(PaymentDetails details) {
         PaymentMessagesPaymentAuthorizedMerchantMessage authMsg = null;
         try {
-            authMsg = service.paymentrequestmerchant(details.getWearId(), details.getGateId(),
-                    details.getTransactionId(), details.getAmount(),
-                    Long.valueOf(details.getPurchaseType())).execute();
+            service.paymentrequestmerchant(details.getTransactionId(), details.getWearId(),
+                    details.getGateId(), details.getTransactionId(), details.getAmount(),
+                    Long.valueOf(details.getPurchaseType()));
         } catch (IOException e) {
             e.printStackTrace();
         }
