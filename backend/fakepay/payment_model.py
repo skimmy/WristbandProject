@@ -67,3 +67,4 @@ class PaymentDetail(object):
         detail.transState = ndbModel.transactionState
         return detail
             
+# ------------------------------------------------------------------------------

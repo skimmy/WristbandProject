@@ -21,3 +21,11 @@ class PaymentAuthorizedMerchantMessage(messages.Message):
     details = messages.MessageField(PaymentDetailMessage, 1, required=True)
     authorized = messages.BooleanField(2, required=True)
     info = messages.MessageField(ReplyInfoMessage, 3)
+
+class PaymentRequestMerchantMessage(messages.Message):
+    transactionId = messages.StringField(1, required=True)
+    senderId = messages.StringField(2)
+    receiverId = messages.StringField(3)
+    details = messages.MessageField(PaymentDetailMessage, 4, required=True)
+    
+        
