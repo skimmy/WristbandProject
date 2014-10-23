@@ -37,7 +37,9 @@ public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-
+    // this indicates whether or not 'HCE' is available on the current device
+    // (true by default and set to false if the CardEmulation instantiation fails)
+    private boolean hceAvailable = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +48,20 @@ public class MainActivity extends ActionBarActivity {
 
         // check (eventually forcing) default service for AID
         String aid = getResources().getString(R.string.nfcAID);
-        if (!NfcUtil.isDefaultServiceForAid(aid, this)) {
-            NfcUtil.setDefaultForAid(aid, this);
+        if (!NfcUtil.isHceAvailable(this)) {
+            this.hceAvailable = false;
+            Log.i(TAG, "Current device does not support HCE");
+        } else {
+            // this is just a fallback if (for whatever reason) cannot instantiate
+            try {
+                if (!NfcUtil.isDefaultServiceForAid(aid, this)) {
+                    NfcUtil.setDefaultForAid(aid, this);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Cannot instantiate HCE " + e.getMessage());
+                this.hceAvailable = false;
+            }
         }
-
 
         // Start the wireless activity
         Button wirelessActivityButton = (Button) findViewById(R.id.wirelessActivityButton);
@@ -63,13 +75,19 @@ public class MainActivity extends ActionBarActivity {
 
         // Start the card emulation activity
         Button cardEmulationAtivityButton = (Button) findViewById(R.id.cardEmulationActivityButton);
-        cardEmulationAtivityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CardEmulationActivity.class);
-                startActivity(intent);
-            }
-        });
+        if (this.hceAvailable) {
+            cardEmulationAtivityButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, CardEmulationActivity.class);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            // if HCE is not supported the corresponding button is disabled
+            // TODO: decide whether keep the 'Card Emulation' button disabled or remove it
+            cardEmulationAtivityButton.setEnabled(false);
+        }
 
         Button cardReaderActivityButton = (Button) findViewById(R.id.cardReaderActivityButton);
         cardReaderActivityButton.setOnClickListener(new View.OnClickListener() {
