@@ -5,7 +5,9 @@ import android.nfc.tech.IsoDep;
 import java.io.IOException;
 
 import it.logostech.wristbandproject.app.model.TagModel;
+import it.logostech.wristbandproject.app.model.payment.PaymentModelUtil;
 import it.logostech.wristbandproject.app.model.payment.PaymentProtocolGate;
+import it.logostech.wristbandproject.app.util.TypeUtil;
 
 /**
  * This class should be used as a daemon where
@@ -89,5 +91,9 @@ public class PaymentGateDaemon {
     private static void simpleNfcCommunication(TagModel tagModel, IsoDep isoDep) {
         // We have here a connected Iso-Dep channel
 
+        // prepare the transaction
+        String transactionId = TypeUtil.byteArrayToHexString(
+                PaymentModelUtil.newTransactionId(12345L));
+        String
     }
 }

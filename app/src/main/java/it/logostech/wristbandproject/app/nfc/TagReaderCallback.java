@@ -23,12 +23,12 @@ import it.logostech.wristbandproject.app.util.TypeUtil;
  */
 public class TagReaderCallback implements NfcAdapter.ReaderCallback {
 
-    // this is the preffered way to communicate with the card reader activity
+    // this is the preferred way to communicate with the card reader activity
     private Handler cardReaderHandler = null;
     // application aid to be used during communications
     private String aid = null;
 
-    // Debug purpse TAG string.
+    // Debug purpose TAG string.
     // WARNING: this TAG has nothing to do with the NFC tag concept
     private static final String TAG = TagReaderCallback.class.getSimpleName();
 
