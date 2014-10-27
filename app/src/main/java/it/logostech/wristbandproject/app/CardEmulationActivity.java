@@ -2,11 +2,16 @@ package it.logostech.wristbandproject.app;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import it.logostech.wristbandproject.app.deamons.PaymentWearDaemon;
+
 
 public class CardEmulationActivity extends Activity {
+
+    public static final String TAG = CardEmulationActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,6 +19,15 @@ public class CardEmulationActivity extends Activity {
         setContentView(R.layout.activity_card_emulation);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v(TAG, "onResume");
+
+        // set the ID tof the PaymentWearDaemon
+        // TODO Change properly once the ID policy is defined
+        PaymentWearDaemon.deviceNfcId = "WEAR";
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

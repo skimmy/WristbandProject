@@ -18,9 +18,10 @@ repositories {
 }
 
 android {
+    signingConfigs {
+    }
     compileSdkVersion 19
     buildToolsVersion '19.1.0'
-
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 19
@@ -37,10 +38,8 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:19.+'
-
     // Play Services will validate the application prior to allowing OAuth2 access.
     //compile(group: 'com.google.android.gms', name: 'play-services', version: 'latest')
-
     // The following client libraries make HTTP/JSON on Android easier.
     // Add the Google API client library.
     compile('com.google.api-client:google-api-client:1.17.0-rc') {
@@ -62,12 +61,10 @@ dependencies {
     compile('com.google.http-client:google-http-client-android:1.17.0-rc') {
         exclude(group: 'com.google.android', module: 'android')
     }
-    compile ('com.google.http-client:google-http-client-gson:1.17.0-rc') {
+    compile('com.google.http-client:google-http-client-gson:1.17.0-rc') {
         exclude module: 'httpclient'
     }
-
     // This is used by the Google HTTP client library.
-//    compile 'com.google.guava:guava:14.0.+'
-
-    compile ([group: 'com.appspot.wristband_unipd', name: 'paymentremote', version: '0.1-1.19.0-SNAPSHOT'])
+    //    compile 'com.google.guava:guava:14.0.+'
+    compile([group: 'com.appspot.wristband_unipd', name: 'paymentremote', version: '0.1-1.19.0-SNAPSHOT'])
 }

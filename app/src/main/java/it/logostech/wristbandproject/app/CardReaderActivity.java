@@ -66,7 +66,8 @@ public class CardReaderActivity extends Activity {
         Log.v(TAG, "onResume");
 
         // Retrieve the current device id and set it on the PaymentGateDaemon
-        PaymentGateDaemon.deviceNfcId = NfcAdapter.EXTRA_ID;
+        // TODO Change properly once the ID policy is defined
+        PaymentGateDaemon.deviceNfcId = "GATE";
 
         // enable all
         Handler handler = (new Handler() {

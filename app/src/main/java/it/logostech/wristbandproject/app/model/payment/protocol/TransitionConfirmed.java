@@ -18,4 +18,9 @@ public class TransitionConfirmed extends PaymentMessageBase {
     public int getChannel() {
         return HTTPS_CHANNEL;
     }
+
+    @Override
+    public byte[] toByteArray() {
+        return new byte[0];
+    }
 }

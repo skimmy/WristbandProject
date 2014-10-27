@@ -34,4 +34,9 @@ public class PaymentIssuedMessage extends PaymentMessageBase {
     public int getChannel() {
         return PaymentMessageBase.NFC_CHANNEL;
     }
+
+    @Override
+    public byte[] toByteArray() {
+        return new byte[0];
+    }
 }

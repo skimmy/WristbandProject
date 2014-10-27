@@ -31,4 +31,9 @@ public class PaymentOk  extends  PaymentMessageBase {
     public int getChannel() {
         return NFC_CHANNEL;
     }
+
+    @Override
+    public byte[] toByteArray() {
+        return new byte[0];
+    }
 }

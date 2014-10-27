@@ -10,6 +10,23 @@ import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBa
  */
 public abstract class PaymentProtocolBase implements PaymentProtocol {
 
+    /** Device is ready to accept connection */
+    protected final int STATE_IDLE = 0;
+    /** Device is connected to another one  */
+    protected final int STATE_CONNECTED = 10;
+    /** The <i>payment request message</i> has been sent to <b>AUTH</b> */
+    protected final int STATE_REQUESTED = 11;
+    /** The payment has been authorized by <b>AUTH</b> */
+    protected final int STATE_AUTHORIZED = 20;
+    /** The <i>payment ok message</i> has been sent to the counterpart */
+    protected final int STATE_PENDING = 21;
+    /** Transaction has been confirmed on committed */
+    protected final int STATE_CONFIRMED = 30;
+    /** Something went wrong */
+    protected final int STATE_ERROR = 99;
+
+    protected int state = STATE_IDLE;
+
     // this map contains all the transactions that are pendind, the
     // key used to map messages is the actual transaction id. Note
     // that this structure should not be exposed, an it should be
@@ -62,4 +79,5 @@ public abstract class PaymentProtocolBase implements PaymentProtocol {
         }
         this.pendingTransactions.put(tId, message);
     }
+
 }

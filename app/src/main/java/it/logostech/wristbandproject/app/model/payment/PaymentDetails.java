@@ -53,6 +53,14 @@ public class PaymentDetails {
         return builder.build();
     }
 
+    public static PaymentDetails fromProperties(String tId, String gId, String wId,
+                                                double amnt, int type) {
+        PaymentDetails.Builder builder = new Builder(tId,wId,gId);
+        builder.amount(amnt).purchaseType(type);
+        return builder.build();
+
+    }
+
     /**
      * Builder class for {@link it.logostech.wristbandproject.app.model.payment.PaymentDetails},
      * following the <em>Effective Java</em> patterns (see Item 2).

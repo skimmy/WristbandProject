@@ -5,7 +5,7 @@ import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
 /**
  * Created by michele.schimd on 02/09/2014.
  */
-public class PaymentRequest extends PaymentMessageBase{
+public class PaymentRequest extends PaymentMessageBase {
     private PaymentDetails paymentDetails;
 
 
@@ -34,6 +34,11 @@ public class PaymentRequest extends PaymentMessageBase{
     @Override
     public int getChannel() {
         return HTTPS_CHANNEL;
+    }
+
+    @Override
+    public byte[] toByteArray() {
+        return new byte[0];
     }
 
 }

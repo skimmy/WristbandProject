@@ -11,10 +11,12 @@ import java.util.Random;
  */
 public class PaymentModelUtil {
 
-    /**
-     * Byte size for transaction ids (to be possibly tuned)
-     */
+    /** Byte size for transaction ids (to be possibly tuned) */
     private static final int TRANSACTION_ID_SIZE = 64;
+
+    /** Maximum number of bytes allowed for a device id */
+    public static final int DEVICE_ID_MAXIMUM_SIZE = 64;
+
 
     /**
      * Generates a new (pseudo random) <i>transaction id</i> that can be used to

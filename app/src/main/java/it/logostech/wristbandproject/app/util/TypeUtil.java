@@ -58,4 +58,26 @@ public class TypeUtil {
         }
         return result;
     }
+
+
+    /**
+     * Creates a byte array from the given string padded with zeros <b>on the
+     * beginning of the array</b>. If the bytes representation of<code>str</code>
+     * is no longer than <code>bytesCount</code> than the output array contains
+     * such representation with trailing zeros on the lowest index position, if
+     * the string representation is too long it is actually truncated.
+     *
+     * @param str the string to be encoded
+     * @param bytesCount the size of the output array
+     * @return
+     */
+    public static byte[] stringToPaddedBytes(String str, int bytesCount) {
+        byte[] bytes = new byte[bytesCount];
+        byte[] stringRepr = str.getBytes();
+        int strLen = stringRepr.length;
+        int begin = Math.max(0, (bytesCount - strLen + 1));
+        int end = bytesCount - 1;
+        System.arraycopy(stringRepr, 0, bytes, begin, (end - begin + 1));
+        return bytes;
+    }
 }

@@ -5,8 +5,10 @@ import android.nfc.tech.IsoDep;
 import java.io.IOException;
 
 import it.logostech.wristbandproject.app.model.TagModel;
+import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
 import it.logostech.wristbandproject.app.model.payment.PaymentModelUtil;
 import it.logostech.wristbandproject.app.model.payment.PaymentProtocolGate;
+import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
 import it.logostech.wristbandproject.app.util.TypeUtil;
 
 /**
@@ -14,19 +16,15 @@ import it.logostech.wristbandproject.app.util.TypeUtil;
  * <p/>
  * Created by Michele Schimd on 22/09/2014.
  */
-public class PaymentGateDaemon {
+public class PaymentGateDaemon extends PaymentDaemonBase {
 
-    // this is the device ID, if it null something went wrong during the
-    // initialization of the Nfc part which is supposed to be performed in the
-    // onResume of the CardReaderActivity because PaymentGate will not be active
-    // if that activity is not in foreground.
-    public static String deviceNfcId = null;
+
 
     // this is the model of the currently connected tag "device"
     private static TagModel currentTag = null;
 
     // the payment protocol associated with the current tag
-    PaymentProtocolGate payProtocol = null;
+    private static PaymentProtocolGate payProtocol = null;
 
     /**
      * This method is called when a tag is discovered (it can be either a new
@@ -51,6 +49,7 @@ public class PaymentGateDaemon {
             // new tag...
             if (currentTag == null) {
                 currentTag = tag;
+                payProtocol = new PaymentProtocolGate(PaymentDaemonBase.deviceNfcId, null);
                 simpleNfcCommunication(tag, isoDep);
                 // ...mismatch
             } else {
@@ -91,9 +90,19 @@ public class PaymentGateDaemon {
     private static void simpleNfcCommunication(TagModel tagModel, IsoDep isoDep) {
         // We have here a connected Iso-Dep channel
 
+        // 1. We send our identity on the channel
+        IdentityMessage identityMessage = payProtocol.onNewConnection(tagModel);
+        sendIdentity(identityMessage, isoDep);
+
         // prepare the transaction
         String transactionId = TypeUtil.byteArrayToHexString(
                 PaymentModelUtil.newTransactionId(12345L));
-        String
+        String wearId = TypeUtil.byteArrayToHexString(tagModel.getId());
+        String gateId = PaymentGateDaemon.deviceNfcId;
+        double amount = 99.99;
+        int type = PaymentDetails.PURCHASE_TYPE_GENERIC;
+        PaymentDetails details = PaymentDetails.fromProperties(
+                transactionId, gateId, wearId, amount, type);
+
     }
 }
