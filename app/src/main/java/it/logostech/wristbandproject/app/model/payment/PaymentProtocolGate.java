@@ -1,6 +1,7 @@
 package it.logostech.wristbandproject.app.model.payment;
 
 import it.logostech.wristbandproject.app.model.TagModel;
+import it.logostech.wristbandproject.app.model.payment.exceptions.PaymentProtocolException;
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBase;
 
@@ -11,63 +12,23 @@ import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBa
  */
 public class PaymentProtocolGate extends PaymentProtocolBase {
 
-//    /**
-//     * {@link #getStatus()} return value when the gate is idle and waiting for
-//     * new payments to be started.
-//     */
-//    public static final int GATE_STATE_IDLE = 0;
-//
-//    /**
-//     * {@link #getStatus()} return value when a payment has been requested, but
-//     * no tag has been discovered
-//     */
-//    public static final int GATE_STATE_PAYMENT_STARTED = 1;
-//
-//    /**
-//     * {@link #getStatus()} return value when tag has been discovered and both
-//     * <i>payment issued</i> and <i>payment request</i> have been sent (to wear
-//     * and auth respectively)
-//     */
-//    public static final int GATE_STATE_TAG_FOUND = 2;
-//
-//    /**
-//     * {@link #getStatus()} return value when payment has been authorized by
-//     * auth and <i>payment ok</i> message has been sent to wear
-//     */
-//    public static final int GATE_STATE_PAYMENT_AUTHORIZED = 3;
-//
-//    /**
-//     * {@link #getStatus()} return value while gate is waiting for <i>payment
-//     * success</i> message from auth
-//     */
-//    public static final int GATE_STATE_PAYMENT_OK = 4;
-//
-//    /**
-//     * {@link #getStatus()} return value when the transaction has been successfully
-//     * concluded and the payment has been done. Gate is meant to stay in this
-//     * state for the short amount of time needed to clear all information about
-//     * the concluded transaction and to send <i>payment performed</i> message
-//     * to wear. At the end of such operations gate moves to {@link #GATE_STATE_IDLE}
-//     * state automatically (<i>i.e.</i> without the necessity of any further
-//     * message)
-//     */
-//    public static final int GATE_STATE_TRANSITION_SUCCESS = 5;
-
-
     private String id;
-
     private String authId;
-
+    private String remoteId;
 
     public PaymentProtocolGate(String id, String authId) {
         this.state = STATE_IDLE;
         this.id = id;
         this.authId = authId;
+        this.remoteId = null;
     }
 
     @Override
     public void onMessageReceived(PaymentMessageBase message) {
-
+        // STEP 1 - "onIdentityMessage"
+        if (message instanceof IdentityMessage) {
+            this.onIdentityMessage((IdentityMessage) message);
+        }
     }
 
     /**
@@ -91,21 +52,42 @@ public class PaymentProtocolGate extends PaymentProtocolBase {
      * </ul>
      * How the device should react on such events is still under definition.
      *
-     * @param remoteTag
+     * This method correspond to Step 0 <i>Tag Discovered </i>on the payment
+     * protocol definition document.
+     *
+     * @param remoteTag the discovered tag
      */
     public IdentityMessage onNewConnection(TagModel remoteTag) {
         IdentityMessage identityMessage = null;
-        // if everything is ok, than we just prepare the proper IdentityMessage
-        // TODO: define the control for "regular" behaviour
         boolean validConnectionRequest = true;
+        // we received a new connection even though we are not in the IDLE state
+        if (this.state != STATE_IDLE) {
+            // TODO check if the connection was lost and act accordingly
+            validConnectionRequest = false;
+        }
+
+        // if everything is ok, than we just prepare the proper IdentityMessage
         if (validConnectionRequest) {
             identityMessage = new IdentityMessage(this.id);
             this.state = STATE_CONNECTED;
         } else {
             // TODO define reaction to unexpected events
             this.state = STATE_ERROR;
+            throw new PaymentProtocolException(
+                    "Unexpected tag discovered " + remoteTag.toString());
         }
         return identityMessage;
+    }
+
+    /**
+     * This method is called when the <i>Daemon</i> receives an <i>identity
+     * message</i> on the NFC channel.
+     *
+     * @param identityMessage the identity message received
+     */
+    public void onIdentityMessage(IdentityMessage identityMessage) {
+        this.remoteId = identityMessage.getClaimedIdentity();
+        this.state = STATE_CONNECTED;
     }
 
     /**

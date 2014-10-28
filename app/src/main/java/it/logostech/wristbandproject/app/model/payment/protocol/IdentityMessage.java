@@ -34,5 +34,8 @@ public class IdentityMessage extends PaymentMessageBase {
         return bytes;
     }
 
+    public String getClaimedIdentity() {
+        return this.getSenderId();
+    }
 
 }

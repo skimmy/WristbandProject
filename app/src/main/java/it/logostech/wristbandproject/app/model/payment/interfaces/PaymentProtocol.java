@@ -3,7 +3,9 @@ package it.logostech.wristbandproject.app.model.payment.interfaces;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBase;
 
 /**
- * Created by michele.schimd on 04/09/2014.
+ * Created by MicheleSchimd on 04/09/2014.
+ *
+ * @version 1.0
  */
 public interface PaymentProtocol {
     /**

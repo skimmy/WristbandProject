@@ -6,7 +6,20 @@ import it.logostech.wristbandproject.app.model.payment.interfaces.PaymentProtoco
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBase;
 
 /**
- * Created by michele.schimd on 03/09/2014.
+ * This class is an abstract class for the <i>payment protocol</i> finite state
+ * machine as implemented by the devices (<i.>i.e.</i.> not by the backend).
+ *
+ * The actual version of the payment protocol unifies the behaviour of both
+ * <b>gate</b> and <b>wear</b> so that they go through the same set of states
+ * during the execution of a single payment transaction. This allowed us to move
+ * the state at this common superclass level. It should however be noted that
+ * the actual advances on the different states depend on the subclasses as they
+ * receive messages specific for the device (<i>i.e.</i> either <b>gate</b>  or
+ * <b>wear</b>) and therefore, they act accordingly.
+ *
+ * Created by Michele Schimd on 03/09/2014.
+ *
+ * @version 1.1
  */
 public abstract class PaymentProtocolBase implements PaymentProtocol {
 
