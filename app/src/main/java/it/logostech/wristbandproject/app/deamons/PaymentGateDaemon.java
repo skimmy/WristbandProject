@@ -1,14 +1,17 @@
 package it.logostech.wristbandproject.app.deamons;
 
 import android.nfc.tech.IsoDep;
+import android.util.Log;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import it.logostech.wristbandproject.app.model.TagModel;
 import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
 import it.logostech.wristbandproject.app.model.payment.PaymentModelUtil;
 import it.logostech.wristbandproject.app.model.payment.PaymentProtocolGate;
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
+import it.logostech.wristbandproject.app.nfc.NfcSession;
 import it.logostech.wristbandproject.app.util.TypeUtil;
 
 /**
@@ -20,24 +23,22 @@ import it.logostech.wristbandproject.app.util.TypeUtil;
  */
 public class PaymentGateDaemon extends PaymentDaemonBase {
 
-    private PaymentGateDaemon() {
-
-    }
+    public static final String TAG = PaymentGateDaemon.class.getSimpleName();
 
     // singleton instance
-    public static final PaymentGateDaemon GATE_DAEOMN = new PaymentGateDaemon();
+    public static final PaymentGateDaemon GATE_DAEMON = new PaymentGateDaemon();
+    private PaymentGateDaemon() { }
 
-    // this is the model of the currently connected tag "device"
-    private static TagModel currentTag = null;
 
-    // the payment protocol associated with the current tag
-    private static PaymentProtocolGate payProtocol = null;
+    // TODO decide whether session and protocol should be merged
+    private NfcSession currentSession;
+    private PaymentProtocolGate payProtocol = null;
 
     /**
      * This method is called when a tag is discovered (it can be either a new
      * one, or one already known). Since the communication on NFC channels are
      * usually <i>half duplex</i>, this method automatically ignores a tag when
-     * there is one already in process. The method also indicated whether the
+     * there is one already in process. The method also indicates whether the
      * passed tag has been ignored (return value <code>false</code>) or it has
      * been set as the new current tag (return value <code>false</code>).
      *
@@ -47,17 +48,21 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
      * <code>false</code> otherwise
      */
     public boolean tagDiscovered(TagModel tag, IsoDep isoDep) {
-        // Check if the Id corresponds with the id that is actually in an active
-        // NFC communication (if any).
-        if (currentTag != null && currentTag.equals(tag)) {
-            // communication continues...
-            // it is hard to decide what to do here!!
+        // Check if the Id corresponds with the one on the current session
+        if (currentSession != null && currentSession.getTagModel().equals(tag)) {
+            // refresh the timestamp of the current session and continue communication
+            currentSession.touch();
+            // ...
         } else {
             // new tag...
-            if (currentTag == null) {
-                currentTag = tag;
+            if (currentSession == null) {
+                currentSession = NfcSession.createSessionFor(tag);
                 payProtocol = new PaymentProtocolGate(PaymentDaemonBase.deviceNfcId, null);
-                simpleNfcCommunication(tag, isoDep);
+                try {
+                    simpleNfcCommunication(tag, isoDep);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 // ...mismatch
             } else {
                 // there already exist a tag so we discard the current one but
@@ -74,42 +79,26 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
     }
 
     /**
-     * Resets the current tag if and only if the actual current tag has the same
-     * id as the passed one.
-     *
-     * @param tag the tag to be reset
-     * @return <code>true</code> if and only if the current tag has been reset
-     */
-    public boolean discardTag(TagModel tag) {
-        if (currentTag.equals(tag)) {
-            currentTag = null;
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Performs a NFC communication payment protocol with the tag described by
      * the passed parameter.
      *
      * @param tagModel the tag identifying the NFC counterpart
      */
-    private void simpleNfcCommunication(TagModel tagModel, IsoDep isoDep) {
+    private void simpleNfcCommunication(TagModel tagModel, IsoDep isoDep) throws IOException {
         // We have here a connected Iso-Dep channel
 
-        // 1. We send our identity on the channel
+        // Step 0 -  send our identity on the channel
         IdentityMessage identityMessage = payProtocol.onNewConnection(tagModel);
-        sendIdentity(identityMessage, isoDep);
-
-        // prepare the transaction
-        String transactionId = TypeUtil.byteArrayToHexString(
-                PaymentModelUtil.newTransactionId(12345L));
-        String wearId = TypeUtil.byteArrayToHexString(tagModel.getId());
-        String gateId = PaymentGateDaemon.deviceNfcId;
-        double amount = 99.99;
-        int type = PaymentDetails.PURCHASE_TYPE_GENERIC;
-        PaymentDetails details = PaymentDetails.fromProperties(
-                transactionId, gateId, wearId, amount, type);
+        byte[] identityReplyRaw = isoDep.transceive(identityMessage.toByteArray());
+        if (identityReplyRaw[0] != IdentityMessage.OP_CODE) {
+            Log.e(TAG, "Expected identity reply");
+        }
+        else {
+            Log.v(TAG, "Received remote identity: " + new String(
+                    Arrays.copyOfRange(identityReplyRaw, 1, identityReplyRaw.length)));
+            // construct IdentityMessage and call protocol onIdentity...
+            this.payProtocol.onIdentityMessage(IdentityMessage.fromBytes(identityReplyRaw));
+        }
 
     }
 }

@@ -19,7 +19,9 @@ import it.logostech.wristbandproject.app.util.TypeUtil;
  * foreground, it also receives <i>tag discovered</i> notifications
  * when tha activity is woke up by the android dispatching system.
  * <p/>
- * Created by Michele Schimd on 22/09/2014.de
+ * Created by Michele Schimd on 22/09/2014.
+ *
+ * @version 1.0
  */
 public class TagReaderCallback implements NfcAdapter.ReaderCallback {
 
@@ -80,7 +82,8 @@ public class TagReaderCallback implements NfcAdapter.ReaderCallback {
 
                     // At this point we simply send the tag to the PaymentSystemDaemon so
                     // that it can be processed.
-                    PaymentGateDaemon.GATE_DAEOMN.tagDiscovered(tagModel, isoDep);
+                    // TODO: the execution of this method should be in a dedicated thread
+                    PaymentGateDaemon.GATE_DAEMON.tagDiscovered(tagModel, isoDep);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.nfc.NfcAdapter;
 import android.nfc.cardemulation.CardEmulation;
 
+import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
 import it.logostech.wristbandproject.app.util.TypeUtil;
 
 /**
@@ -38,17 +39,7 @@ public class NfcUtil {
     }
 
 
-    /**
-     * Builds a SELECT AID message.
-     *
-     * @param aid target id
-     * @return a SELECT AID message
-     */
-    public static byte[] buildSelectApdu(String aid) {
-        // Format: [CLASS | INSTRUCTION | PARAMETER 1 | PARAMETER 2 | LENGTH | DATA]
-        return TypeUtil.hexStringToByteArray(SELECT_APDU_HEADER +
-                String.format("%02X", aid.length() / 2) + aid);
-    }
+
 
     /**
      * Checks whether current context is the system default for the passed ApplicationID (AID)
@@ -72,6 +63,18 @@ public class NfcUtil {
     public static void setDefaultForAid(String aid, Context ctx) {
         Intent intent = new Intent(CardEmulation.ACTION_CHANGE_DEFAULT);
         ctx.startActivity(intent);
+    }
+
+    /**
+     * Builds a SELECT AID message.
+     *
+     * @param aid target id
+     * @return a SELECT AID message
+     */
+    public static byte[] buildSelectApdu(String aid) {
+        // Format: [CLASS | INSTRUCTION | PARAMETER 1 | PARAMETER 2 | LENGTH | DATA]
+        return TypeUtil.hexStringToByteArray(SELECT_APDU_HEADER +
+                String.format("%02X", aid.length() / 2) + aid);
     }
 
 }

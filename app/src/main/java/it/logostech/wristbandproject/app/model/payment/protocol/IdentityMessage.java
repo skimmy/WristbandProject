@@ -1,5 +1,7 @@
 package it.logostech.wristbandproject.app.model.payment.protocol;
 
+import java.util.Arrays;
+
 import it.logostech.wristbandproject.app.model.payment.PaymentModelUtil;
 import it.logostech.wristbandproject.app.util.TypeUtil;
 
@@ -13,11 +15,18 @@ import it.logostech.wristbandproject.app.util.TypeUtil;
  */
 public class IdentityMessage extends PaymentMessageBase {
 
-    public static final byte OP_CODE = 101;
+    public static IdentityMessage fromBytes(byte[] bytes) {
+        // TODO: insert check of first byte
+        return new IdentityMessage(new String(Arrays.copyOfRange(bytes, 1, bytes.length)));
+    }
+
+    public static final byte OP_CODE = (byte)'I';
 
     public IdentityMessage(String senderId) {
         super(senderId, null, null);
     }
+
+
 
     @Override
     public int getChannel() {
@@ -27,10 +36,13 @@ public class IdentityMessage extends PaymentMessageBase {
     @Override
     public byte[] toByteArray() {
         // size: size(OP_CODE) + size(ID)
-        int n = 1 + PaymentModelUtil.DEVICE_ID_MAXIMUM_SIZE;
+        byte[] idBytes = this.getSenderId().getBytes();
+        int n = Math.min(PaymentModelUtil.DEVICE_ID_MAXIMUM_SIZE, idBytes.length) + 1;
+        // create array with trailing op code and senderId
         byte[] bytes = new byte[n];
         bytes[0] = OP_CODE;
-        TypeUtil.stringToPaddedBytes(this.getSenderId(), PaymentModelUtil.DEVICE_ID_MAXIMUM_SIZE);
+        System.arraycopy(idBytes, 0, bytes, 1, n - 1);
+        //TypeUtil.stringToPaddedBytes(this.getSenderId(), PaymentModelUtil.DEVICE_ID_MAXIMUM_SIZE);
         return bytes;
     }
 

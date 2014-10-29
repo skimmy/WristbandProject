@@ -1,5 +1,7 @@
 package it.logostech.wristbandproject.app.model.payment;
 
+import android.util.Log;
+
 import it.logostech.wristbandproject.app.model.TagModel;
 import it.logostech.wristbandproject.app.model.payment.exceptions.PaymentProtocolException;
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
@@ -11,6 +13,8 @@ import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBa
  * @version  1.1
  */
 public class PaymentProtocolGate extends PaymentProtocolBase {
+
+    public static final String TAG = PaymentProtocolGate.class.getSimpleName();
 
     private String id;
     private String authId;
@@ -86,6 +90,7 @@ public class PaymentProtocolGate extends PaymentProtocolBase {
      * @param identityMessage the identity message received
      */
     public void onIdentityMessage(IdentityMessage identityMessage) {
+        Log.v(TAG, "IdentityMessage from " + identityMessage.getSenderId());
         this.remoteId = identityMessage.getClaimedIdentity();
         this.state = STATE_CONNECTED;
     }

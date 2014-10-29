@@ -2,6 +2,8 @@ package it.logostech.wristbandproject.app.deamons;
 
 import android.nfc.tech.IsoDep;
 
+import java.io.IOException;
+
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
 
 /**
@@ -28,8 +30,5 @@ public class PaymentDaemonBase {
     // hardware (which may change and is not accessible from the APIs).
     public static String deviceNfcId = null;
 
-    protected static void sendIdentity(IdentityMessage identityMessage, IsoDep isoDep) {
-
-    }
 
 }
