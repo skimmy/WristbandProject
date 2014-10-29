@@ -12,13 +12,20 @@ import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
 import it.logostech.wristbandproject.app.util.TypeUtil;
 
 /**
- * This class should be used as a daemon where
+ * This class should be used as a daemon
  * <p/>
  * Created by Michele Schimd on 22/09/2014.
+ *
+ * @version 1.1
  */
 public class PaymentGateDaemon extends PaymentDaemonBase {
 
+    private PaymentGateDaemon() {
 
+    }
+
+    // singleton instance
+    public static final PaymentGateDaemon GATE_DAEOMN = new PaymentGateDaemon();
 
     // this is the model of the currently connected tag "device"
     private static TagModel currentTag = null;
@@ -39,7 +46,7 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
      * @return <code>true</code> if the passed tag is the new current tag and
      * <code>false</code> otherwise
      */
-    public static boolean tagDiscovered(TagModel tag, IsoDep isoDep) {
+    public boolean tagDiscovered(TagModel tag, IsoDep isoDep) {
         // Check if the Id corresponds with the id that is actually in an active
         // NFC communication (if any).
         if (currentTag != null && currentTag.equals(tag)) {
@@ -73,7 +80,7 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
      * @param tag the tag to be reset
      * @return <code>true</code> if and only if the current tag has been reset
      */
-    public static boolean discardTag(TagModel tag) {
+    public boolean discardTag(TagModel tag) {
         if (currentTag.equals(tag)) {
             currentTag = null;
             return true;
@@ -87,7 +94,7 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
      *
      * @param tagModel the tag identifying the NFC counterpart
      */
-    private static void simpleNfcCommunication(TagModel tagModel, IsoDep isoDep) {
+    private void simpleNfcCommunication(TagModel tagModel, IsoDep isoDep) {
         // We have here a connected Iso-Dep channel
 
         // 1. We send our identity on the channel

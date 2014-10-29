@@ -80,7 +80,7 @@ public class TagReaderCallback implements NfcAdapter.ReaderCallback {
 
                     // At this point we simply send the tag to the PaymentSystemDaemon so
                     // that it can be processed.
-                    PaymentGateDaemon.tagDiscovered(tagModel, isoDep);
+                    PaymentGateDaemon.GATE_DAEOMN.tagDiscovered(tagModel, isoDep);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -5,9 +5,21 @@ import android.nfc.tech.IsoDep;
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
 
 /**
- * Created by skimmy on 10/27/14.
+ * Created by Michele Schimd on 10/27/14.
+ *
+ * @version 1.1
  */
 public class PaymentDaemonBase {
+
+    /**
+     * Protected constructor, the {@link it.logostech.wristbandproject.app.deamons.PaymentDaemonBase}
+     * class is not instantiable, moreover the class does not provide any public
+     * instance so it is not usable unless derived classes are used.
+     *
+     */
+    protected PaymentDaemonBase() {
+
+    }
 
     // This is the ID used which should be initialized in the onResume method
     // of the CardEmulatorActivity or CardReaderActivity. Note that because of the Android NFC
