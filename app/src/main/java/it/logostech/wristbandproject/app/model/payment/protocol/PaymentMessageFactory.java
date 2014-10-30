@@ -13,7 +13,7 @@ public class PaymentMessageFactory {
 
     public static PaymentIssuedMessage createPaymentIssuedMessage(
             String sender, String receiver, String tId, PaymentDetails details) {
-        return new PaymentIssuedMessage(sender, receiver, tId, details);
+        return new PaymentIssuedMessage(details);
     }
 
     public static PaymentRequestCustomer createPaymentRequestCustomerMessage(

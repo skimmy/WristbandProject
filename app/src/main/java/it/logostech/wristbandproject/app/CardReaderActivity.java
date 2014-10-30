@@ -15,6 +15,7 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import it.logostech.wristbandproject.app.deamons.PaymentGateDaemon;
+import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
 import it.logostech.wristbandproject.app.nfc.TagReaderCallback;
 
 public class CardReaderActivity extends Activity {
@@ -68,6 +69,10 @@ public class CardReaderActivity extends Activity {
         // Retrieve the current device id and set it on the PaymentGateDaemon
         // TODO Change properly once the ID policy is defined
         PaymentGateDaemon.deviceNfcId = "GATE";
+        // TODO Here payment details are filled and passed to the daemon
+        PaymentGateDaemon.GATE_DAEMON.setPayDetails(
+                PaymentDetails.fromProperties("TID", PaymentGateDaemon.deviceNfcId," WEAR",
+                        100,PaymentDetails.PURCHASE_TYPE_GENERIC));
 
         // enable all
         Handler handler = (new Handler() {
