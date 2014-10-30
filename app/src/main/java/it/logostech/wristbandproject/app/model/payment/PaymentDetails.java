@@ -2,6 +2,10 @@ package it.logostech.wristbandproject.app.model.payment;
 
 import com.appspot.wristband_unipd.paymentremote.model.PaymentMessagesPaymentDetailMessage;
 
+import java.util.Arrays;
+
+import it.logostech.wristbandproject.app.util.TypeUtil;
+
 /**
  *  This class represents the information (<em>i.e.</em> details) about a payment
  *  transaction.
@@ -29,6 +33,40 @@ public class PaymentDetails {
         builder.amount(other.amount)
                 .purchaseType(other.purchaseType);
         return builder.build();
+    }
+
+    /**
+     * Constructs a {@link it.logostech.wristbandproject.app.model.payment.PaymentDetails}
+     * objects from its byte representation as returned by the method {@link #toBytes()}.
+     *
+     * If the input array is not on the format prescribed, the behaviour of this method is
+     * unpredictable (although it is likely to throw some exception indicating either bad access
+     * to arrays or bad conversion).
+     *
+     * @param bytes the byte representation
+     * @return a {@link it.logostech.wristbandproject.app.model.payment.PaymentDetails} instance
+     * obtained by parsing the argument bytes array
+     */
+    public static PaymentDetails fromBytes(byte[] bytes) {
+        String tid = null;
+        String gid = null;
+        String wid = null;
+        double amount = 0;
+        int type = 0;
+        // parsing
+        int offset = 0;
+        tid = new String(Arrays.copyOfRange(bytes, offset + 1, (offset + 1) + bytes[offset]));
+        offset += 1 + bytes[offset];
+        gid = new String(Arrays.copyOfRange(bytes, offset + 1, (offset + 1) + bytes[offset]));
+        offset += 1 + bytes[offset];
+        wid = new String(Arrays.copyOfRange(bytes, offset + 1, (offset + 1) + bytes[offset]));
+        offset += 1 + bytes[offset];
+        amount = TypeUtil.bytesToDouble(Arrays.copyOfRange(bytes, offset, offset + 8));
+        offset += 8;
+        type = (int)TypeUtil.bytesToLong(Arrays.copyOfRange(bytes, offset, offset + 8));
+
+        // build and return
+        return PaymentDetails.fromProperties(tid, gid, wid, amount, type);
     }
 
     /**
@@ -135,5 +173,67 @@ public class PaymentDetails {
 
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%s, %s, %s] <-> %.2f (%d)",
+                transactionId, gateId, wearId, amount, purchaseType);
+    }
+
+    /**
+     * Returns a byte array describing the details. The format of the array is <br />
+     * <code>[TIL|TID|GIL|GID|WIL|WID|AMNT|TYPE]</code> <br />
+     * where:
+     * <ol>
+     *     <li><b>xIL</b> is the length in bytes of the xID</li>
+     *     <li><b>xID</b> is the ID for x (either T: transaction, G: gate or W: wear)/li>
+     *     <li><b>AMND</b> is the 8 bytes double value of the amount</li>
+     *     <li><b>TYPE</b> is the 8 bytes long value of the purchase type</li>
+     * </ol>
+     *
+     * @return a byte array representation of details
+     */
+    public byte[] toBytes() {
+        int n = 0;
+        byte[] rawTid = this.transactionId.getBytes();
+        byte[] rawGid = this.gateId.getBytes();
+        byte[] rawWid = this.wearId.getBytes();
+        byte[] rawAmount = TypeUtil.doubleToBytes(this.amount);
+        byte[] rawType = TypeUtil.longToBytes(this.purchaseType);
+
+        // total length, string sizes are forced to be one byte (max id size is 64 bytes)
+        n += 1 + rawTid.length;
+        n += 1 + rawGid.length;
+        n += 1 + rawWid.length;
+        n += rawAmount.length;
+        n += rawType.length;
+
+        // create the array, fill and return it
+        int offset = 0;
+        byte tmp;
+        byte[] bytes = new byte[n];
+        // transaction ID
+        tmp = (byte)rawTid.length;
+        bytes[offset++] = tmp;
+        System.arraycopy(rawTid, 0, bytes, offset, tmp);
+        offset += tmp;
+        // Gate ID
+        bytes[offset++] = (byte)rawGid.length;
+        tmp = (byte) rawGid.length;
+        System.arraycopy(rawGid, 0, bytes, offset, tmp);
+        offset += tmp;
+        // Wear ID
+        tmp = (byte)rawWid.length;
+        bytes[offset++] = tmp;
+        System.arraycopy(rawWid, 0, bytes, offset, tmp);
+        offset += tmp;
+        // Amount and type
+        tmp = (byte)rawAmount.length;
+        System.arraycopy(rawAmount, 0, bytes, offset, rawAmount.length);
+        offset += tmp;
+        tmp = (byte)rawType.length;
+        System.arraycopy(rawType, 0, bytes, offset, tmp);
+        return bytes;
     }
 }

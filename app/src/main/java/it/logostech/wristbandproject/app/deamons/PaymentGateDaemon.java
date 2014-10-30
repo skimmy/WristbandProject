@@ -11,6 +11,7 @@ import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
 import it.logostech.wristbandproject.app.model.payment.PaymentModelUtil;
 import it.logostech.wristbandproject.app.model.payment.PaymentProtocolGate;
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
+import it.logostech.wristbandproject.app.model.payment.protocol.PaymentIssuedMessage;
 import it.logostech.wristbandproject.app.nfc.NfcSession;
 import it.logostech.wristbandproject.app.util.TypeUtil;
 
@@ -33,6 +34,16 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
     // TODO decide whether session and protocol should be merged
     private NfcSession currentSession;
     private PaymentProtocolGate payProtocol = null;
+
+    public PaymentDetails getPayDetails() {
+        return payDetails;
+    }
+
+    public void setPayDetails(PaymentDetails payDetails) {
+        this.payDetails = payDetails;
+    }
+
+    private PaymentDetails payDetails = null;
 
     /**
      * This method is called when a tag is discovered (it can be either a new
@@ -92,12 +103,23 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
         byte[] identityReplyRaw = isoDep.transceive(identityMessage.toByteArray());
         if (identityReplyRaw[0] != IdentityMessage.OP_CODE) {
             Log.e(TAG, "Expected identity reply");
+            // TODO something went wrong, act accordingly
         }
         else {
             Log.v(TAG, "Received remote identity: " + new String(
                     Arrays.copyOfRange(identityReplyRaw, 1, identityReplyRaw.length)));
             // construct IdentityMessage and call protocol onIdentity...
             this.payProtocol.onIdentityMessage(IdentityMessage.fromBytes(identityReplyRaw));
+        }
+
+        // STEP 1 - send paymentIssue to WEAR and send paymentRequest to AUTH
+        // construct and send PaymentIssued message through the NFC channel
+        if (this.payDetails == null) {
+            // TODO details 'null' is an error either bring up a form or abort transaction
+        } else {
+            byte[] rawMessage = PaymentIssuedMessage.
+                    fromPaymentDetails(this.payDetails).toByteArray();
+            isoDep.transceive(rawMessage);
         }
 
     }

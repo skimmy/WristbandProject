@@ -3,6 +3,7 @@ package it.logostech.wristbandproject.app.model.payment;
 import android.util.Log;
 
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
+import it.logostech.wristbandproject.app.model.payment.protocol.PaymentIssuedMessage;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBase;
 
 /**
@@ -30,11 +31,18 @@ public class PaymentProtocolWear extends PaymentProtocolBase {
         if (message instanceof IdentityMessage) {
             this.onIdentityMessage((IdentityMessage)message);
         }
+        if (message instanceof PaymentIssuedMessage) {
+            this.onPaymentIssuedMessage((PaymentIssuedMessage) message);
+        }
     }
 
     private void onIdentityMessage(IdentityMessage identityMessage) {
         Log.v(TAG, "IdentityMessage from " + identityMessage.getSenderId());
         this.state = STATE_CONNECTED;
+    }
+
+    private void onPaymentIssuedMessage(PaymentIssuedMessage paymentIssued) {
+        Log.v(TAG, "PaymentIssued, details: " + paymentIssued.getPaymentDetails().toString());
     }
 
 }

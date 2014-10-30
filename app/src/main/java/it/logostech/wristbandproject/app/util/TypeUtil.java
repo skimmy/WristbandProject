@@ -1,5 +1,6 @@
 package it.logostech.wristbandproject.app.util;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
@@ -57,6 +58,26 @@ public class TypeUtil {
             offset += array.length;
         }
         return result;
+    }
+
+    public static byte[] longToBytes(long l) {
+        byte[] bytes = new byte[8];
+        ByteBuffer.wrap(bytes).putLong(l);
+        return bytes;
+    }
+
+    public static long bytesToLong(byte[] bytes) {
+        return ByteBuffer.wrap(bytes).getLong();
+    }
+
+    public static byte[] doubleToBytes(double d) {
+        byte[] bytes = new byte[8];
+        ByteBuffer.wrap(bytes).putDouble(d);
+        return bytes;
+    }
+
+    public static double bytesToDouble(byte[] bytes) {
+        return ByteBuffer.wrap(bytes).getDouble();
     }
 
 
