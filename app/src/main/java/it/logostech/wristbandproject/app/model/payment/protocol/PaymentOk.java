@@ -8,6 +8,9 @@ import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
  * Created by michele.schimd on 02/09/2014.
  */
 public class PaymentOk  extends  PaymentMessageBase {
+
+    public static final byte OP_CODE = (byte)'O';
+
     private PaymentDetails paymentDetails;
     private PaymentChallenge challengeResolved;
 

@@ -12,15 +12,18 @@ import it.logostech.wristbandproject.app.model.payment.PaymentModelUtil;
 import it.logostech.wristbandproject.app.model.payment.PaymentProtocolGate;
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentIssuedMessage;
+import it.logostech.wristbandproject.app.model.payment.protocol.PaymentRequestMerchant;
 import it.logostech.wristbandproject.app.nfc.NfcSession;
 import it.logostech.wristbandproject.app.util.TypeUtil;
 
 /**
- * This class should be used as a daemon
- * <p/>
- * Created by Michele Schimd on 22/09/2014.
+ * This is the <b>Gate</b> <i>daemon</i> used to perform payment when the device
+ * is operating in <i>payment gate mode</i>.
  *
+ * @author Michele Schimd
  * @version 1.1
+ * @since 22/09/2014.
+ *
  */
 public class PaymentGateDaemon extends PaymentDaemonBase {
 
@@ -117,10 +120,22 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
         if (this.payDetails == null) {
             // TODO details 'null' is an error either bring up a form or abort transaction
         } else {
+            // send the PaymentIssued to WEAR
             byte[] rawMessage = PaymentIssuedMessage.
                     fromPaymentDetails(this.payDetails).toByteArray();
             isoDep.transceive(rawMessage);
+            // send the PaymentRequestMerchant to AUTH
+            PaymentAuthDaemon.AUTH_DAEMON.sendMessage(
+                    PaymentRequestMerchant.fromPaymentDetailsAndIds(this.payDetails,
+                            PaymentDaemonBase.deviceNfcId, PaymentAuthDaemon.AUTH_ID));
         }
 
+    }
+
+    public void reset() {
+        // this is just a brut-force reset
+        this.currentSession = null;
+//        this.payDetails = null;
+        this.payProtocol = null;
     }
 }

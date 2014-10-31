@@ -34,6 +34,15 @@ public class CardReaderActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_reader);
 
+        // ---------- RESET BUTTON ----------
+        Button resetButton = (Button) findViewById(R.id.card_reader_reset_button_id);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PaymentGateDaemon.GATE_DAEMON.reset();
+            }
+        });
+
         // create reader callback for NFC (registration will take place during
         // onResume and de-registration during onPause)
         this.readerCallback = new TagReaderCallback(aid);
