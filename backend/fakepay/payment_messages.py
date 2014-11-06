@@ -2,12 +2,6 @@
 
 from protorpc import messages
 
-class ReplyInfoMessage(messages.Message):
-    """This is the message that should be contained in every reply message. """
-    # The return code is the only required field
-    code = messages.IntegerField(1, required=True)    
-    text = messages.StringField(2)
-
 class PaymentDetailMessage(messages.Message):
     """This message contains details about the payment"""
     wearId = messages.StringField(1, required=True)
@@ -15,7 +9,18 @@ class PaymentDetailMessage(messages.Message):
     transactionId = messages.StringField(3, required=True)
     amount = messages.FloatField(4, required=True)
     purchaseType = messages.IntegerField(5, required=True)
-    
+
+class TransactionIdMessage(messages.Message):
+    """This message is used to query the service for a specific transaction"""
+    tid = messages.StringField(1, required=True)
+
+class ReplyInfoMessage(messages.Message):
+    """This is the message that should be contained in every reply message. """
+    # The return code is the only required field
+    code = messages.IntegerField(1, required=True)    
+    text = messages.StringField(2)
+    details = messages.MessageField(PaymentDetailMessage, 3)
+   
 class PaymentAuthorizedMerchantMessage(messages.Message):
     """This is the message returned to the client once the payment request merchant request has been parsed"""
     details = messages.MessageField(PaymentDetailMessage, 1, required=True)

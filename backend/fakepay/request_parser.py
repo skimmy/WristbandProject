@@ -41,3 +41,9 @@ def parsePaymentRequestMerchant(paymentDetails):
         return [retCode, returnStrings[retCode], model.PaymentDetail.fromNdbModel(transactionInfo)]
     # Something unexpected happened and therefore we return a generic error
     return [RET_CODE_GENERIC_ERROR, returnStrings[RET_CODE_GENERIC_ERROR]]
+
+def parseTransactionInfo(transactionId):
+    # construct the model
+    retCode = RET_CODE_OK
+    retDetails = None
+    return msg.ReplyInfoMessage(code=retCode, text=returnStrings[retCode], details=retDetails)
