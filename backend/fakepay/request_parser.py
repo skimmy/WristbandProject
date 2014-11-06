@@ -43,7 +43,18 @@ def parsePaymentRequestMerchant(paymentDetails):
     return [RET_CODE_GENERIC_ERROR, returnStrings[RET_CODE_GENERIC_ERROR]]
 
 def parseTransactionInfo(transactionId):
-    # construct the model
+    # basic (default) initializations
     retCode = RET_CODE_OK
     retDetails = None
-    return msg.ReplyInfoMessage(code=retCode, text=returnStrings[retCode], details=retDetails)
+
+    # get (if any) the transaction information from the datastore
+    transactionInfo = ds.retrieveTransactionInfo(transactionId.tid)
+    if (transactionInfo == None):
+        retCode = RET_CODE_TRANS_NOT_FOUND
+    else:
+        retCode = RET_CODE_TRANS_FOUND
+        retDetails = (model.PaymentDetail.fromNdbModel(transactionInfo)).toMessage()
+        transState = transactionInfo.transactionState
+
+    return msg.ReplyInfoMessage(code=retCode, text=returnStrings[retCode], 
+                                details=retDetails, state=transState)

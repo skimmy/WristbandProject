@@ -53,17 +53,18 @@ class PaymentDetail(object):
             gateId = self. gateId,
             amount = self.amount,
             purchaseType = self.purchaseType,
-            transactionState = self.transState
+            transactionState = self.transState,
+            state = TS_UNKNOWN # state is always set to unknown
             )
         
     @staticmethod
     def fromNdbModel(ndbModel):
         detail = PaymentDetail()
-        detail.transId = ndbModel.transactionId,
-        detail.wearId = ndbModel.wearId,
-        detail.gateId = ndbModel.gateId,
-        detail.amount = ndbModel.amount,
-        detail.purchaseType = ndbModel.purchaseType,
+        detail.transId = ndbModel.transactionId
+        detail.wearId = ndbModel.wearId
+        detail.gateId = ndbModel.gateId
+        detail.amount = ndbModel.amount
+        detail.purchaseType = ndbModel.purchaseType
         detail.transState = ndbModel.transactionState
         return detail
             

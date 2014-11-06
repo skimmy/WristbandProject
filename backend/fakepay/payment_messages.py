@@ -20,6 +20,7 @@ class ReplyInfoMessage(messages.Message):
     code = messages.IntegerField(1, required=True)    
     text = messages.StringField(2)
     details = messages.MessageField(PaymentDetailMessage, 3)
+    state = messages.IntegerField(4)
    
 class PaymentAuthorizedMerchantMessage(messages.Message):
     """This is the message returned to the client once the payment request merchant request has been parsed"""

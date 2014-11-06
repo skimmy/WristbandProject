@@ -4,7 +4,12 @@ about data integrity and consisency should not be implemented in helper function
 
 from google.appengine.ext import ndb
 
+import util.logutil as Log
+
 import datastore_model as dsm
+
+TAG="DS_HELPER"
+
 # This is the name of the current database. Note that on the same datastore we
 # may have different databases (i.e. different names) to identify different
 # contexts of the same application (e.g. different payment circuits, ...)
@@ -21,6 +26,7 @@ def blocking_entity_group_query():
     pass
 
 def retrieveTransactionInfo(tid):
+    Log.v(TAG, "Retrieve for id " + tid)
     # retrieve object from datastore
     tAncestor = transactionAncestor()
     storedEntities = dsm.PaymentDetailDatastore.query(
