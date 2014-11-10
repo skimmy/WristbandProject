@@ -54,7 +54,7 @@ class PaymentDetail(object):
             amount = self.amount,
             purchaseType = self.purchaseType,
             transactionState = self.transState,
-            state = TS_UNKNOWN # state is always set to unknown
+#            state = TS_UNKNOWN # state is always set to unknown
             )
         
     @staticmethod

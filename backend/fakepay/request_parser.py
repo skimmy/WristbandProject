@@ -36,7 +36,8 @@ def parsePaymentRequestMerchant(paymentDetails):
         ds.insertNewTransaction(transactionInfo)
         retCode = RET_CODE_TRANS_NOT_FOUND
         return [retCode, returnStrings[retCode], detailModel]
-    else:        
+    else:
+        transactionInfo = ds.recordMerchantRequestReceived(transactionInfo.key)
         retCode = RET_CODE_TRANS_FOUND        
         return [retCode, returnStrings[retCode], model.PaymentDetail.fromNdbModel(transactionInfo)]
     # Something unexpected happened and therefore we return a generic error

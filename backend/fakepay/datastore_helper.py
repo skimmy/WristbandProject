@@ -7,6 +7,7 @@ from google.appengine.ext import ndb
 import util.logutil as Log
 
 import datastore_model as dsm
+import payment_model as pm
 
 TAG="DS_HELPER"
 
@@ -48,3 +49,19 @@ def retrieveTransactionInfo(tid):
 def insertNewTransaction(ndbDetail):
     ndbDetail.parent = transactionAncestor()
     ndbDetail.put()
+
+@ndb.transactional
+def recordMerchantRequestReceived(tKey):
+    """Refreshes the value of the stauts for the transaction id passed as an argument. Caller should guarantee that there exist at least one instnace associated with the passed key. This function is a database transaction so that its result are either stored or not (and no inconsistency can ever occur). However this does not completely solve all race condition problems."""
+    entity = ndb.Key.get(tKey)
+    state = entity.transactionState
+    # Actual state is UNKNOWN we record MERCH_REQ
+    if state == pm.TS_UNKNOWN:
+        entity.transactionState = pm.TS_MERCH_REQUEST
+    elif state == pm.TS_CUST_REQUEST:
+        entity.transactionState = pm.TS_FULL_REQUEST
+    entity.put()
+    return entity
+        
+    
+    
