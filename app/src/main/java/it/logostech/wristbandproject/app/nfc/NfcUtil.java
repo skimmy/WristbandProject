@@ -7,8 +7,11 @@ import android.content.pm.FeatureInfo;
 import android.content.pm.PackageManager;
 import android.nfc.NfcAdapter;
 import android.nfc.cardemulation.CardEmulation;
+import android.util.Log;
 
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
+import it.logostech.wristbandproject.app.model.payment.protocol.PaymentIssuedMessage;
+import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBase;
 import it.logostech.wristbandproject.app.util.TypeUtil;
 
 /**
@@ -26,6 +29,8 @@ public class NfcUtil {
     public static final byte[] SELECT_OK_SW = TypeUtil.hexStringToByteArray("9000");
     // "UNKNOWN" status word sent in response to invalid APDU command (0x0000)
     public static final byte[] UNKNOWN_CMD_SW = TypeUtil.hexStringToByteArray("0000");
+    // Generic acknowledgement array for the NFC channel
+    public static final byte[] ACK_BYTE_ARRAY = {'A', 'C', 'K', '!'};
 
     /**
      * Checks if the current device supports Host Card Emulation (HCE).
@@ -75,6 +80,18 @@ public class NfcUtil {
         // Format: [CLASS | INSTRUCTION | PARAMETER 1 | PARAMETER 2 | LENGTH | DATA]
         return TypeUtil.hexStringToByteArray(SELECT_APDU_HEADER +
                 String.format("%02X", aid.length() / 2) + aid);
+    }
+
+    public static PaymentMessageBase parseNfcReply(byte[] rawReply) {
+        if (rawReply == null || rawReply.length == 0) {
+            return  null;
+        }
+        // Case IdentityMessage
+        if (rawReply[0] == IdentityMessage.OP_CODE) {
+            return IdentityMessage.fromBytes(rawReply);
+        }
+
+        return null;
     }
 
 }

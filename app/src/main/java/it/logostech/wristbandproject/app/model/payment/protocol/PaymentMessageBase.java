@@ -42,4 +42,5 @@ public abstract class PaymentMessageBase {
     public abstract int getChannel();
 
     public abstract byte[] toByteArray();
+
 }

@@ -21,7 +21,7 @@ public abstract class PaymentDaemonBase implements Runnable {
 
     protected static final long DAEMON_SLEEP_TIME = 500;
 
-    private Queue<PaymentMessageBase> messagesQueue = new ConcurrentLinkedQueue<PaymentMessageBase>();
+    protected Queue<PaymentMessageBase> messagesQueue = new ConcurrentLinkedQueue<PaymentMessageBase>();
 
     /**
      * Protected constructor, the {@link it.logostech.wristbandproject.app.deamons.PaymentDaemonBase}
@@ -41,7 +41,10 @@ public abstract class PaymentDaemonBase implements Runnable {
     public static String deviceNfcId = null;
 
     public void onMessage(PaymentMessageBase message) {
-        Log.v(TAG, "Message: " + message.toString());
+        if (message == null) {
+            return;
+        }
+        Log.v(TAG, "Message: " + message.getClass().getSimpleName());
         this.messagesQueue.add(message);
     }
 
@@ -53,7 +56,7 @@ public abstract class PaymentDaemonBase implements Runnable {
                     PaymentMessageBase nextMessage = this.messagesQueue.remove();
                     this.processMessage(nextMessage);
                     // Just so that we can receive interrupts also when lot of messages
-                    // are in the queuesku
+                    // are in the queue
                     Thread.sleep(10);
                 }
                 Thread.sleep(DAEMON_SLEEP_TIME);

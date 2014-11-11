@@ -1,12 +1,9 @@
 package it.logostech.wristbandproject.app.deamons;
 
-import android.os.Bundle;
 import android.util.Log;
 
 import java.util.Arrays;
 
-import it.logostech.wristbandproject.app.R;
-import it.logostech.wristbandproject.app.model.TagModel;
 import it.logostech.wristbandproject.app.model.payment.PaymentProtocolWear;
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentIssuedMessage;
@@ -65,7 +62,7 @@ public class PaymentWearDaemon extends PaymentDaemonBase {
                 // Payment issued command received
                 Log.v(TAG, "Payment issued (P) command received");
                 this.payProtocol.onMessageReceived(PaymentIssuedMessage.fromBytes(bytes));
-                // send confirmation??
+                return NfcUtil.ACK_BYTE_ARRAY;
                 // send PaymentRequestCustomer to AUTH
             default:
                 Log.v(TAG, "Received SELECT for unsupported aid");
