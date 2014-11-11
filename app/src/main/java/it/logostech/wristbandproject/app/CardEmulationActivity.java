@@ -30,6 +30,7 @@ public class CardEmulationActivity extends Activity {
         // TODO Change properly once the ID policy is defined
         PaymentWearDaemon.deviceNfcId = "WEAR";
         this.wearDaemonThread = new Thread(PaymentWearDaemon.WEAR_DAEOMN);
+        this.wearDaemonThread.setName(PaymentWearDaemon.TAG);
         this.wearDaemonThread.start();
     }
 

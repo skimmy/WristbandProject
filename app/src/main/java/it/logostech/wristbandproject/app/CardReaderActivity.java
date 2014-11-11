@@ -78,7 +78,9 @@ public class CardReaderActivity extends Activity {
         // Retrieve the current device id and set it on the PaymentGateDaemon
         // TODO Change properly once the ID policy is defined
         PaymentGateDaemon.deviceNfcId = "GATE";
+        // Start the Gate Daemon Thread
         this.gateDaemonThread = new Thread(PaymentGateDaemon.GATE_DAEMON);
+        this.gateDaemonThread.setName(PaymentGateDaemon.TAG);
         this.gateDaemonThread.start();
 
         // TODO Here payment details are filled and passed to the daemon

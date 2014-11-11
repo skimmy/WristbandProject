@@ -49,12 +49,12 @@ public class PaymentAuthDaemon extends PaymentDaemonBase {
     public PaymentMessageBase sendMessage(PaymentMessageBase message) {
         Log.v(TAG, "Sending message " + message.toString());
         if (message instanceof PaymentRequestMerchant) {
-            return this.onPaymentRequestMerhcand((PaymentRequestMerchant) message);
+            return this.onPaymentRequestMerhcant((PaymentRequestMerchant) message);
         }
         return null;
     }
 
-    private PaymentAuthorizationMerchant onPaymentRequestMerhcand(PaymentRequestMerchant request) {
+    private PaymentAuthorizationMerchant onPaymentRequestMerhcant(PaymentRequestMerchant request) {
         Log.i(TAG, "Sending PaymentRequestMerchant for transaction " +
                 request.getPaymentDetails().getTransactionId());
         // TODO: Here we must kee track of the sent messages so to avoid troubles
@@ -62,4 +62,10 @@ public class PaymentAuthDaemon extends PaymentDaemonBase {
         // TODO: parse remote response and construct proper return message
         return null;
     }
+
+    @Override
+    protected void processMessage(PaymentMessageBase message) {
+
+    }
+
 }
