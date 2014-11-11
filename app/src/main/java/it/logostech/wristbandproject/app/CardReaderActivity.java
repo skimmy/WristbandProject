@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import it.logostech.wristbandproject.app.deamons.PaymentAuthDaemon;
 import it.logostech.wristbandproject.app.deamons.PaymentGateDaemon;
 import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
 import it.logostech.wristbandproject.app.nfc.TagReaderCallback;
@@ -27,6 +28,7 @@ public class CardReaderActivity extends Activity {
     // this is the (default) application id for Nfc communications
     private String aid = "F0010203040506";
     private Thread gateDaemonThread = null;
+    private Thread authDaemonThread = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,20 +77,23 @@ public class CardReaderActivity extends Activity {
         super.onResume();
         Log.v(TAG, "onResume");
 
+
         // Retrieve the current device id and set it on the PaymentGateDaemon
         // TODO Change properly once the ID policy is defined
         PaymentGateDaemon.deviceNfcId = "GATE";
-        // Start the Gate Daemon Thread
-        this.gateDaemonThread = new Thread(PaymentGateDaemon.GATE_DAEMON);
-        this.gateDaemonThread.setName(PaymentGateDaemon.TAG);
-        this.gateDaemonThread.start();
+        PaymentAuthDaemon.deviceNfcId = "AUTH";
+
+        // create AUTH and GATE Daemon threads
+        this.authDaemonThread = new Thread(PaymentAuthDaemon.AUTH_DAEMON, PaymentAuthDaemon.TAG);
+        this.gateDaemonThread = new Thread(PaymentGateDaemon.GATE_DAEMON, PaymentGateDaemon.TAG);
+        // link GATE as callback of AUTH
+        PaymentAuthDaemon.AUTH_DAEMON.setCallbackDaemon(PaymentGateDaemon.GATE_DAEMON);
 
         // TODO Here payment details are filled and passed to the daemon
         PaymentGateDaemon.GATE_DAEMON.setPayDetails(
                 PaymentDetails.fromProperties("TID", PaymentGateDaemon.deviceNfcId," WEAR",
                         100,PaymentDetails.PURCHASE_TYPE_GENERIC));
 
-        // enable all
         Handler handler = (new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -99,13 +104,17 @@ public class CardReaderActivity extends Activity {
             }
         });
 
-        this.readerCallback.setCardReaderHandler(handler);
 
         // enables and sets the foreground reader callback
         // this flags are recommended for communication with Android HCE (see
         // API guide "NFC Basics" and enableReaderMode method on API Reference)
+        this.readerCallback.setCardReaderHandler(handler);
         int flags = NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK;
         NfcAdapter.getDefaultAdapter(this).enableReaderMode(this, this.readerCallback, flags, null);
+
+        // start all daemons
+        this.authDaemonThread.start();
+        this.gateDaemonThread.start();
     }
 
     @Override
@@ -113,7 +122,10 @@ public class CardReaderActivity extends Activity {
         super.onPause();
         // disable foreground reader callback (not sure if needed!)
         NfcAdapter.getDefaultAdapter(this).disableForegroundDispatch(this);
+        // interrupt and destroy daemons
         this.gateDaemonThread.interrupt();
+        this.authDaemonThread.interrupt();
         this.gateDaemonThread = null;
+        this.authDaemonThread = null;
     }
 }

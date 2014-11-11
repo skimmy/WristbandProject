@@ -11,9 +11,9 @@ import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBase;
 
 /**
- * Created by Michele Schimd on 10/27/14.
- *
- * @version 1.1
+ * @author Michele Schimd
+ * @since 10/27/14
+ * @version 1.2
  */
 public abstract class PaymentDaemonBase implements Runnable {
 

@@ -18,10 +18,11 @@ import it.logostech.wristbandproject.app.model.payment.protocol.PaymentRequestMe
  * <b>wear</b> and, therefore, should be properly initialized in either case.
  *
  * @author Michele Schimd
- * @version 1.0
+ * @version 1.1
  * @since 10/31/14
  */
 public class PaymentAuthDaemon extends PaymentDaemonBase {
+
 
     public static final String TAG = PaymentAuthDaemon.class.getSimpleName();
 
@@ -37,27 +38,13 @@ public class PaymentAuthDaemon extends PaymentDaemonBase {
         RemotePaymentWS.initService();
     }
 
-    /**
-     * This method is used to send any type of message to the backend. The method
-     * itself is responsible for parsing the passed message so to invoke the proper
-     * remote service, on the other hand the returned value is generic message and
-     * the type depends on the input parameter
-     *
-     * @param message
-     * @return a
-     */
-    public PaymentMessageBase sendMessage(PaymentMessageBase message) {
-        Log.v(TAG, "Sending message " + message.toString());
-        if (message instanceof PaymentRequestMerchant) {
-            return this.onPaymentRequestMerhcant((PaymentRequestMerchant) message);
-        }
-        return null;
-    }
+    private PaymentDaemonBase callback;
+
 
     private PaymentAuthorizationMerchant onPaymentRequestMerhcant(PaymentRequestMerchant request) {
         Log.i(TAG, "Sending PaymentRequestMerchant for transaction " +
                 request.getPaymentDetails().getTransactionId());
-        // TODO: Here we must kee track of the sent messages so to avoid troubles
+        // TODO: Here we must keep track of the sent messages so to avoid troubles
         RemotePaymentWS.paymentRequestMerchant(request.getPaymentDetails());
         // TODO: parse remote response and construct proper return message
         return null;
@@ -65,7 +52,13 @@ public class PaymentAuthDaemon extends PaymentDaemonBase {
 
     @Override
     protected void processMessage(PaymentMessageBase message) {
+        if (message instanceof PaymentRequestMerchant) {
+            this.callback.onMessage(this.onPaymentRequestMerhcant((PaymentRequestMerchant) message));
+        }
+    }
 
+    public void setCallbackDaemon(PaymentDaemonBase callback) {
+        this.callback = callback;
     }
 
 }

@@ -14,9 +14,10 @@ import it.logostech.wristbandproject.app.nfc.NfcUtil;
 import it.logostech.wristbandproject.app.util.TypeUtil;
 
 /**
- * Created by Michele Schimd on 10/27/14.
  *
- * @version 1.1
+ * @author Michele Schimd
+ * @since 10/27/14
+ * @version 1.2
  */
 public class PaymentWearDaemon extends PaymentDaemonBase {
 

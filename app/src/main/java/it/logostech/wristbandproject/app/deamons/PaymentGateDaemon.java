@@ -23,7 +23,7 @@ import it.logostech.wristbandproject.app.util.TypeUtil;
  * is operating in <i>payment gate mode</i>.
  *
  * @author Michele Schimd
- * @version 1.1
+ * @version 1.2
  * @since 22/09/2014.
  *
  */
@@ -51,8 +51,6 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
     }
 
     private PaymentDetails payDetails = null;
-
-
 
     /**
      * This method is called when a tag is discovered (it can be either a new
@@ -89,31 +87,6 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
         return true;
     }
 
-    /**
-     * Performs a NFC communication payment protocol with the tag described by
-     * the passed parameter.
-     *
-     * @param tagModel the tag identifying the NFC counterpart
-     */
-    private void simpleNfcCommunication(TagModel tagModel, IsoDep isoDep) throws IOException {
-
-        // STEP 1 - send paymentIssue to WEAR and send paymentRequest to AUTH
-        // construct and send PaymentIssued message through the NFC channel
-        if (this.payDetails == null) {
-
-        } else {
-            // send the PaymentIssued to WEAR
-            byte[] rawMessage = PaymentIssuedMessage.
-                    fromPaymentDetails(this.payDetails).toByteArray();
-            isoDep.transceive(rawMessage);
-            // send the PaymentRequestMerchant to AUTH
-            PaymentAuthDaemon.AUTH_DAEMON.sendMessage(
-                    PaymentRequestMerchant.fromPaymentDetailsAndIds(this.payDetails,
-                            PaymentDaemonBase.deviceNfcId, PaymentAuthDaemon.AUTH_ID));
-        }
-
-    }
-
     public void reset() {
         // this is just a brut-force reset
         this.currentSession = null;
@@ -139,7 +112,9 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
                 byte[] paymentIssueCommand = PaymentIssuedMessage.
                         fromPaymentDetails(payDetails).toByteArray();
                 NfcConnection.NFC_CONNECTION.setCommand(paymentIssueCommand);
-
+                PaymentAuthDaemon.AUTH_DAEMON.onMessage(
+                        PaymentRequestMerchant.fromPaymentDetailsAndIds(this.payDetails,
+                                PaymentDaemonBase.deviceNfcId, PaymentAuthDaemon.AUTH_ID));
             }
         }
 
