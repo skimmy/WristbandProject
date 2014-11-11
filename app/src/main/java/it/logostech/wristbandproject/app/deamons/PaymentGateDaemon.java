@@ -12,6 +12,7 @@ import it.logostech.wristbandproject.app.model.payment.PaymentModelUtil;
 import it.logostech.wristbandproject.app.model.payment.PaymentProtocolGate;
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentIssuedMessage;
+import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBase;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentRequestMerchant;
 import it.logostech.wristbandproject.app.nfc.NfcSession;
 import it.logostech.wristbandproject.app.util.TypeUtil;
@@ -47,6 +48,8 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
     }
 
     private PaymentDetails payDetails = null;
+
+
 
     /**
      * This method is called when a tag is discovered (it can be either a new
@@ -135,7 +138,12 @@ public class PaymentGateDaemon extends PaymentDaemonBase {
     public void reset() {
         // this is just a brut-force reset
         this.currentSession = null;
-//        this.payDetails = null;
         this.payProtocol = null;
     }
+
+    @Override
+    protected void processMessage(PaymentMessageBase message) {
+
+    }
+
 }

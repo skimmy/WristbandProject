@@ -13,6 +13,8 @@ public class CardEmulationActivity extends Activity {
 
     public static final String TAG = CardEmulationActivity.class.getSimpleName();
 
+    private Thread wearDaemonThread = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +29,15 @@ public class CardEmulationActivity extends Activity {
         // set the ID tof the PaymentWearDaemon
         // TODO Change properly once the ID policy is defined
         PaymentWearDaemon.deviceNfcId = "WEAR";
+        this.wearDaemonThread = new Thread(PaymentWearDaemon.WEAR_DAEOMN);
+        this.wearDaemonThread.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.wearDaemonThread.interrupt();
+        this.wearDaemonThread = null;
     }
 
     @Override

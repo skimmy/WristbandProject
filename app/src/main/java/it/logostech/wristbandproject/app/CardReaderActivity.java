@@ -23,10 +23,10 @@ public class CardReaderActivity extends Activity {
     // TAG string for debug purpose
     private static final String TAG = CardReaderActivity.class.getSimpleName();
     // this callback is called while activity is in foreground
-    TagReaderCallback readerCallback = null;
-
+    private TagReaderCallback readerCallback = null;
     // this is the (default) application id for Nfc communications
     private String aid = "F0010203040506";
+    private Thread gateDaemonThread = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +78,9 @@ public class CardReaderActivity extends Activity {
         // Retrieve the current device id and set it on the PaymentGateDaemon
         // TODO Change properly once the ID policy is defined
         PaymentGateDaemon.deviceNfcId = "GATE";
+        this.gateDaemonThread = new Thread(PaymentGateDaemon.GATE_DAEMON);
+        this.gateDaemonThread.start();
+
         // TODO Here payment details are filled and passed to the daemon
         PaymentGateDaemon.GATE_DAEMON.setPayDetails(
                 PaymentDetails.fromProperties("TID", PaymentGateDaemon.deviceNfcId," WEAR",
@@ -106,8 +109,9 @@ public class CardReaderActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-
         // disable foreground reader callback (not sure if needed!)
         NfcAdapter.getDefaultAdapter(this).disableForegroundDispatch(this);
+        this.gateDaemonThread.interrupt();
+        this.gateDaemonThread = null;
     }
 }

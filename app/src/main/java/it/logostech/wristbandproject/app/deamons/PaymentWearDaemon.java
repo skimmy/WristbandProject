@@ -10,6 +10,7 @@ import it.logostech.wristbandproject.app.model.TagModel;
 import it.logostech.wristbandproject.app.model.payment.PaymentProtocolWear;
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentIssuedMessage;
+import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBase;
 import it.logostech.wristbandproject.app.nfc.MyHostApduService;
 import it.logostech.wristbandproject.app.nfc.NfcSession;
 import it.logostech.wristbandproject.app.nfc.NfcUtil;
@@ -71,4 +72,10 @@ public class PaymentWearDaemon extends PaymentDaemonBase {
                 return NfcUtil.UNKNOWN_CMD_SW;
         }
     }
+
+    @Override
+    protected void processMessage(PaymentMessageBase message) {
+
+    }
+
 }
