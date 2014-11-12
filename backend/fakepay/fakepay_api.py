@@ -26,7 +26,7 @@ to the custom payment protocol designed for the WristbandProject."""
 class PaymentRemoteService(remote.Service):
     
     # ---------------------------------- PAYMENT REQUEST MERCHANT ----------------------------------
-    # PaymentRequestMerchant: the merchante (i.e. gate) issues a pyment to the 
+    # PaymentRequestMerchant: the merchant (i.e. gate) issues a payment to the 
     #    authority (i.e. the backend payment service, a.k.a. this service)
     @endpoints.method(msg.PaymentRequestMerchantMessage, msg.PaymentAuthorizedMerchantMessage,
                       path="payreqmerch", http_method=HTTP_DEFAULT_METHOD,
@@ -50,6 +50,22 @@ class PaymentRemoteService(remote.Service):
         # 3. Store the new transaction
 
         # 4. Create the reply
+        return replyMsg
+
+    # ---------------------------------- PAYMENT REQUEST CUSTOMER ----------------------------------
+    # PaymentRequestCustomer: the customer (i.e. wear) issues a payment to the 
+    #    authority (i.e. the backend payment service, a.k.a. this service)
+    @endpoints.method(msg.PaymentRequestCustomerMessage, msg.PaymentAuthorizedCustomerMessage,
+                      path="payrequest", http_method=HTTP_DEFAULT_METHOD,
+                      name="paymentrequestcustomer")
+    def payment_request_customer(self, request):
+        Log.v(TAG, "PaymentRequestCustomer (" + str(request.transactionId) + ")")
+        [returnCode, returnText, newDetails]  = parser.parsePaymentRequestCustomer(request.details)
+        # prepare and return reply
+        replyInfo = msg.ReplyInfoMessage(code=returnCode, text=returnText)
+        auth = True
+        replyMsg = msg.PaymentAuthorizedCustomerMessage(
+            details=request.details, authorized=auth, info=replyInfo)
         return replyMsg
 
     

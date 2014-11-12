@@ -43,6 +43,23 @@ def parsePaymentRequestMerchant(paymentDetails):
     # Something unexpected happened and therefore we return a generic error
     return [RET_CODE_GENERIC_ERROR, returnStrings[RET_CODE_GENERIC_ERROR]]
 
+def parsePaymentRequestCustomer(paymentDetails):
+    # Get the model object from the GCE message object
+    detailModel = model.PaymentDetail(paymentDetails)
+    transactionInfo = ds.retrieveTransactionInfo(detailModel.transId)
+    if transactionInfo == None:
+        # register the customer request and insert the a new transaction
+        detailModel.transState = model.TS_CUST_REQUEST
+        transactionInfo = detailModel.toNdbModel()
+        ds.insertNewTransaction(transactionInfo)
+        retCode = RET_CODE_TRANS_NOT_FOUND
+        return [retCode, returnStrings[retCode], detailModel]
+    else:
+        transactionInfo = ds.recordCustomerRequestReceived(transactionInfo.key)
+        retCode = RET_CODE_TRANS_FOUND        
+        return [retCode, returnStrings[retCode], model.PaymentDetail.fromNdbModel(transactionInfo)]
+    return [RET_CODE_GENERIC_ERROR, returnStrings[RET_CODE_GENERIC_ERROR]]
+
 def parseTransactionInfo(transactionId):
     # basic (default) initializations
     retCode = RET_CODE_OK
