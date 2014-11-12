@@ -3,6 +3,7 @@ package it.logostech.wristbandproject.app.backend;
 import android.util.Log;
 
 import com.appspot.wristband_unipd.paymentremote.Paymentremote;
+import com.appspot.wristband_unipd.paymentremote.model.PaymentMessagesPaymentAuthorizedCustomerMessage;
 import com.appspot.wristband_unipd.paymentremote.model.PaymentMessagesPaymentAuthorizedMerchantMessage;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.gson.GsonFactory;
@@ -10,6 +11,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import java.io.IOException;
 
 import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
+import it.logostech.wristbandproject.app.model.payment.protocol.PaymentAuthorizationCustomer;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentAuthorizationMerchant;
 
 /**
@@ -39,14 +41,38 @@ public class RemotePaymentWS {
         PaymentMessagesPaymentAuthorizedMerchantMessage authMsg = null;
 //        details = PaymentDetails.fromProperties("ABCDE", "gg", "www", 9876.54, PaymentDetails.PURCHASE_TYPE_SERVICE);
         try {
-            authMsg  = service.paymentrequestmerchant(details.getTransactionId(), details.getWearId(),
-                    details.getGateId(), details.getTransactionId(), details.getAmount(),
-                    Long.valueOf(details.getPurchaseType())).execute();
+            authMsg  = service.paymentrequestmerchant(
+                    details.getTransactionId(),
+                    details.getWearId(),
+                    details.getGateId(),
+                    details.getTransactionId(),
+                    details.getAmount(),
+                    Long.valueOf(details.getPurchaseType())
+            ).execute();
             Log.v(TAG, "PaymentRequestMerchant (" + details.getTransactionId() + ") " +
                     "Authorized: " + authMsg.getAuthorized());
         } catch (IOException e) {
             Log.e(TAG, "PaymentRequestMerchant error: " + e.getMessage());
         }
         return PaymentAuthorizationMerchant.fromMerchantAuthMessage(authMsg);
+    }
+
+    public static PaymentAuthorizationCustomer paymentAuthorizationCustomer(PaymentDetails details) {
+        PaymentMessagesPaymentAuthorizedCustomerMessage authMsg = null;
+        try {
+            authMsg = service.paymentrequestcustomer(
+                    details.getTransactionId(),
+                    details.getWearId(),
+                    details.getGateId(),
+                    details.getTransactionId(),
+                    details.getAmount(),
+                    Long.valueOf(details.getPurchaseType())
+            ).execute();
+            Log.v(TAG, "PaymentRequestCustomer (" + details.getTransactionId() + ") " +
+                    "Authorized: " + authMsg.getAuthorized());
+        } catch (IOException e) {
+            Log.e(TAG, "PaymentRequestCustomer error: " + e.getMessage());
+        }
+        return PaymentAuthorizationCustomer.fromCustomerAuthMessage(authMsg);
     }
 }

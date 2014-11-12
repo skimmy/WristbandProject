@@ -6,8 +6,8 @@ import it.logostech.wristbandproject.app.model.payment.PaymentChallenge;
 import it.logostech.wristbandproject.app.model.payment.PaymentDetails;
 
 /**
- * Created by Michele Schimd on 02/09/2014.
- *
+ * @author Michele Schimd
+ * @since 02/09/2014
  * @version 1.0
  */
 public class PaymentAuthorizationMerchant extends PaymentAuthorization {
@@ -47,6 +47,7 @@ public class PaymentAuthorizationMerchant extends PaymentAuthorization {
         public Builder(PaymentDetails details, String remoteId) {
             transaction = details.getTransactionId();
             this.details = details;
+            // The sender is AUTH (this will basically never be anything but null)
             this.sender = remoteId;
         }
 

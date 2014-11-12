@@ -53,8 +53,9 @@ public class PaymentAuthDaemon extends PaymentDaemonBase {
     }
 
     private PaymentAuthorizationCustomer onPaymentRequestCustomer(PaymentRequestCustomer request) {
-        Log.i(TAG, "PaymentRequestMerchant  (" +
+        Log.i(TAG, "PaymentRequestCustomer  (" +
                 request.getPaymentDetails().getTransactionId() + ")");
+        RemotePaymentWS.paymentAuthorizationCustomer(request.getPaymentDetails());
         // TODO: parse remote response and construct proper return message
         return null;
     }

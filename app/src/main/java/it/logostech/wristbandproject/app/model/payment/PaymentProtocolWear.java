@@ -2,9 +2,11 @@ package it.logostech.wristbandproject.app.model.payment;
 
 import android.util.Log;
 
+import it.logostech.wristbandproject.app.deamons.PaymentAuthDaemon;
 import it.logostech.wristbandproject.app.model.payment.protocol.IdentityMessage;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentIssuedMessage;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBase;
+import it.logostech.wristbandproject.app.model.payment.protocol.PaymentRequestCustomer;
 
 /**
  * This class contains the protocol implemented by the wear entity during the
@@ -43,6 +45,10 @@ public class PaymentProtocolWear extends PaymentProtocolBase {
 
     private void onPaymentIssuedMessage(PaymentIssuedMessage paymentIssued) {
         Log.v(TAG, "PaymentIssued, details: " + paymentIssued.getPaymentDetails().toString());
+        // construct the authorization message and send to AUTH daemon
+        PaymentRequestCustomer requestCustomer = PaymentRequestCustomer.
+                fromPaymentDetails(paymentIssued.getPaymentDetails());
+        PaymentAuthDaemon.AUTH_DAEMON.onMessage(requestCustomer);
     }
 
 }

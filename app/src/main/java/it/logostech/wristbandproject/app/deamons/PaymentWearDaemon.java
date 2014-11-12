@@ -63,8 +63,9 @@ public class PaymentWearDaemon extends PaymentDaemonBase {
                 // Payment issued command received
                 Log.v(TAG, "Payment issued (P) command received");
                 this.payProtocol.onMessageReceived(PaymentIssuedMessage.fromBytes(bytes));
+
                 return NfcUtil.ACK_BYTE_ARRAY;
-                // send PaymentRequestCustomer to AUTH
+
             default:
                 Log.v(TAG, "Received SELECT for unsupported aid");
                 return NfcUtil.UNKNOWN_CMD_SW;
