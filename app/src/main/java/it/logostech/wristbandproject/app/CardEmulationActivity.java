@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import it.logostech.wristbandproject.app.deamons.PaymentAuthDaemon;
 import it.logostech.wristbandproject.app.deamons.PaymentWearDaemon;
 
 
@@ -14,6 +15,7 @@ public class CardEmulationActivity extends Activity {
     public static final String TAG = CardEmulationActivity.class.getSimpleName();
 
     private Thread wearDaemonThread = null;
+    private Thread authDaemonThread = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +31,28 @@ public class CardEmulationActivity extends Activity {
         // set the ID tof the PaymentWearDaemon
         // TODO Change properly once the ID policy is defined
         PaymentWearDaemon.deviceNfcId = "WEAR";
-        this.wearDaemonThread = new Thread(PaymentWearDaemon.WEAR_DAEOMN);
-        this.wearDaemonThread.setName(PaymentWearDaemon.TAG);
+        PaymentAuthDaemon.deviceNfcId = "AUTH";
+
+        // create daemon threads
+        this.wearDaemonThread = new Thread(PaymentWearDaemon.WEAR_DAEOMN, PaymentWearDaemon.TAG);
+        this.authDaemonThread = new Thread(PaymentAuthDaemon.AUTH_DAEMON, PaymentAuthDaemon.TAG);
+        // link WEAR as callback of AUTH
+        PaymentAuthDaemon.AUTH_DAEMON.setCallbackDaemon(PaymentWearDaemon.WEAR_DAEOMN);
+
+        // start all daemon threads
         this.wearDaemonThread.start();
+        this.authDaemonThread.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+        // interrupt daemon threads
         this.wearDaemonThread.interrupt();
         this.wearDaemonThread = null;
+        this.authDaemonThread.interrupt();
+        this.authDaemonThread = null;
     }
 
     @Override

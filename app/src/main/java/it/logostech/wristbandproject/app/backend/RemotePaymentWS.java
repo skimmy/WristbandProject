@@ -37,16 +37,16 @@ public class RemotePaymentWS {
 
     public static PaymentAuthorizationMerchant paymentRequestMerchant(PaymentDetails details) {
         PaymentMessagesPaymentAuthorizedMerchantMessage authMsg = null;
-        details = PaymentDetails.fromProperties("ABCDE", "gg", "www", 9876.54, PaymentDetails.PURCHASE_TYPE_SERVICE);
+//        details = PaymentDetails.fromProperties("ABCDE", "gg", "www", 9876.54, PaymentDetails.PURCHASE_TYPE_SERVICE);
         try {
             authMsg  = service.paymentrequestmerchant(details.getTransactionId(), details.getWearId(),
                     details.getGateId(), details.getTransactionId(), details.getAmount(),
                     Long.valueOf(details.getPurchaseType())).execute();
-            Log.v(TAG, "PaymentRequestMerchant reply: " +
-                    ((authMsg != null) ? authMsg.toString() : "null"));
+            Log.v(TAG, "PaymentRequestMerchant (" + details.getTransactionId() + ") " +
+                    "Authorized: " + authMsg.getAuthorized());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "PaymentRequestMerchant error: " + e.getMessage());
         }
-        return null;
+        return PaymentAuthorizationMerchant.fromMerchantAuthMessage(authMsg);
     }
 }

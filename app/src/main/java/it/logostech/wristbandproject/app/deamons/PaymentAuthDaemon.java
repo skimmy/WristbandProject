@@ -3,8 +3,10 @@ package it.logostech.wristbandproject.app.deamons;
 import android.util.Log;
 
 import it.logostech.wristbandproject.app.backend.RemotePaymentWS;
+import it.logostech.wristbandproject.app.model.payment.protocol.PaymentAuthorizationCustomer;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentAuthorizationMerchant;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentMessageBase;
+import it.logostech.wristbandproject.app.model.payment.protocol.PaymentRequestCustomer;
 import it.logostech.wristbandproject.app.model.payment.protocol.PaymentRequestMerchant;
 
 /**
@@ -42,10 +44,17 @@ public class PaymentAuthDaemon extends PaymentDaemonBase {
 
 
     private PaymentAuthorizationMerchant onPaymentRequestMerhcant(PaymentRequestMerchant request) {
-        Log.i(TAG, "Sending PaymentRequestMerchant for transaction " +
-                request.getPaymentDetails().getTransactionId());
+        Log.i(TAG, "PaymentRequestMerchant  (" +
+                request.getPaymentDetails().getTransactionId() + ")");
         // TODO: Here we must keep track of the sent messages so to avoid troubles
         RemotePaymentWS.paymentRequestMerchant(request.getPaymentDetails());
+        // TODO: parse remote response and construct proper return message
+        return null;
+    }
+
+    private PaymentAuthorizationCustomer onPaymentRequestCustomer(PaymentRequestCustomer request) {
+        Log.i(TAG, "PaymentRequestMerchant  (" +
+                request.getPaymentDetails().getTransactionId() + ")");
         // TODO: parse remote response and construct proper return message
         return null;
     }
@@ -54,6 +63,9 @@ public class PaymentAuthDaemon extends PaymentDaemonBase {
     protected void processMessage(PaymentMessageBase message) {
         if (message instanceof PaymentRequestMerchant) {
             this.callback.onMessage(this.onPaymentRequestMerhcant((PaymentRequestMerchant) message));
+        }
+        if (message instanceof PaymentRequestCustomer) {
+            this.callback.onMessage(this.onPaymentRequestCustomer((PaymentRequestCustomer) message));
         }
     }
 

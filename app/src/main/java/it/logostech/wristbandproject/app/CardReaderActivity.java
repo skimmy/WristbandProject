@@ -42,6 +42,9 @@ public class CardReaderActivity extends Activity {
             @Override
             public void onClick(View view) {
                 PaymentGateDaemon.GATE_DAEMON.reset();
+                TextView latestTagView = (TextView) findViewById(R.id.cardReaderLastTagText);
+                latestTagView.setText("");
+
             }
         });
 
