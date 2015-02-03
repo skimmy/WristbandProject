@@ -39,5 +39,12 @@
             android:layout_below="@id/cardReaderActivityButton"
             android:layout_alignParentLeft="true"/>
 
+        <Button
+            android:id="@+id/locationActivityButton"
+            android:text="@string/location_button_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wsDebugActivityButton"/>
+
 
 </RelativeLayout>

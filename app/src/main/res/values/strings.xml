@@ -41,6 +41,7 @@
     <string name="title_activity_web_service_debug">WebServiceDebugActivity</string>
     <string name="service_reply_string">Service Reply</string>
     <string name="reset_string">Reset</string>
+    <string name="location_button_name">Location</string>
 
 
 </resources>

@@ -1,36 +1,17 @@
 package it.logostech.wristbandproject.app;
 
-import android.app.DialogFragment;
 import android.content.Intent;
-import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.LinkedList;
-import java.util.List;
 
 import it.logostech.wristbandproject.app.debug.WebServiceDebugActivity;
-import it.logostech.wristbandproject.app.model.TagModel;
 import it.logostech.wristbandproject.app.nfc.NfcUtil;
-import it.logostech.wristbandproject.app.util.DialogResponder;
-import it.logostech.wristbandproject.app.util.TagUtility;
+import it.logostech.wristbandproject.app.util.DeviceUtil;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -74,9 +55,9 @@ public class MainActivity extends ActionBarActivity {
         });
 
         // Start the card emulation activity
-        Button cardEmulationAtivityButton = (Button) findViewById(R.id.cardEmulationActivityButton);
+        Button cardEmulationActivityButton = (Button) findViewById(R.id.cardEmulationActivityButton);
         if (this.hceAvailable) {
-            cardEmulationAtivityButton.setOnClickListener(new View.OnClickListener() {
+            cardEmulationActivityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(MainActivity.this, CardEmulationActivity.class);
@@ -86,7 +67,7 @@ public class MainActivity extends ActionBarActivity {
         } else {
             // if HCE is not supported the corresponding button is disabled
             // TODO: decide whether keep the 'Card Emulation' button disabled or remove it
-            cardEmulationAtivityButton.setEnabled(false);
+            cardEmulationActivityButton.setEnabled(false);
         }
 
         Button cardReaderActivityButton = (Button) findViewById(R.id.cardReaderActivityButton);
@@ -106,6 +87,12 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+
+        Button locationActivityButton = (Button) findViewById(R.id.locationActivityButton);
+        if (!DeviceUtil.isLocationAvailable(this)) {
+            // Location service is not available on the current device
+            locationActivityButton.setEnabled(false);
+        }
 
 
     }
