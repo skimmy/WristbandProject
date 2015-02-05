@@ -12,14 +12,20 @@
     <!-- NFC Permissions -->
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.BIND_NFC_SERVICE" />
+    <!-- Location Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Other Permissions -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <uses-feature android:name="android.hardware.wifi" />
-
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="true" />
     <uses-feature android:name="android.hardware.nfc.hce" />
     <uses-feature android:name="android.hardware.FEATURE_NFC_HOST_CARD_EMULATION" />
+
+
 
     <application
         android:allowBackup="true"
@@ -56,15 +62,19 @@
             <!-- NFC intent filters -->
             <intent-filter>
                 <action android:name="android.nfc.action.TAG_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -77,8 +87,10 @@
             android:permission="android.permission.BIND_NFC_SERVICE" >
             <intent-filter>
                 <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
             <meta-data
                 android:name="android.nfc.cardemulation.host_apdu_service"
                 android:resource="@xml/apduservice" />
@@ -89,6 +101,10 @@
             android:name=".debug.WebServiceDebugActivity"
             android:label="@string/title_activity_web_service_debug" >
         </activity>
-
+        <activity
+            android:name=".LocationActivity"
+            android:label="@string/title_activity_location" >
+        </activity>
     </application>
+
 </manifest>

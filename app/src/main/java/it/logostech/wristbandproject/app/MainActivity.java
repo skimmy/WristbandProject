@@ -92,6 +92,15 @@ public class MainActivity extends ActionBarActivity {
         if (!DeviceUtil.isLocationAvailable(this)) {
             // Location service is not available on the current device
             locationActivityButton.setEnabled(false);
+        } else {
+            locationActivityButton.setEnabled(true);
+            locationActivityButton.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, LocationActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
 
 

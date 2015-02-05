@@ -25,7 +25,7 @@ public class DeviceUtil {
         return (service != null);
     }
 
-    public LocationManager getLocationManager(Context ctx) {
+    public static LocationManager getLocationManager(Context ctx) {
         return (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
     }
 
