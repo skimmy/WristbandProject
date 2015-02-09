@@ -15,7 +15,6 @@ class PaymentDetailDatastore(ndb.Model):
 
 
 class LocationDatastore(ndb.Model):
-    tid = ndb.StringProperty()
     wbid = ndb.StringProperty()
     longitude = ndb.FloatProperty()
     latitude = ndb.FloatProperty()

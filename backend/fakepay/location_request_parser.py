@@ -1,15 +1,25 @@
 import datastore_model as dsm
 import datastore_helper as dsh
-import location_messages as msg
+import location_model as model
+
+TAG = "LocationRequestParser"
 
 def parseLocationUpdateMessage(msg):
-    # Retrieve last location for WBID from the DS
-    wbid = msg.wbid
-    # refresh the location
-    wblocation = dsh.readWBLocation(wbid)
-    if wblocation == None:
-        pass
-    # store back the refreshed location on the DS
+    # create model from message
+    locModel = model.WristbandLocation(msg)
 
+    # Retrieve last location for WBID from the DS
+    wbid = locModel.wbid
+    wblocation = dsh.readWBLocation(wbid)
+
+    # refresh the location
+    if wblocation == None:
+        wblocation = locModel.toNdbModel()
+    else:
+        wblocation.latitude = locModel.latitude
+        wblocation.longitude = locModel.longitude
+        wblocation.accuracy = locModel.accuracy
+    # store back the refreshed location on the DS
+    dsh.writeWBLocation(wblocation)
     # send message to the tutor
 

@@ -83,8 +83,18 @@ def recordCustomerRequestReceived(tKey):
         
 # takes a wristband id as input and returns the ds model for its location
 def readWBLocation(wbid):
-    entity
+    lAncestor = locationAncestor()
+    storedEntities = dsm.LocationDatastore.query(
+        dsm.LocationDatastore.wbid == wbid,
+        ancestor=lAncestor).iter()
+    # case 1 - No entry retrieved
+    if (not storedEntities.has_next()):
+        return None
+    # case 2 - At least one enrity retrieved
+    else:
+        return storedEntities.next()
 
 # takes a wristband DS model and stores it into the DS (with possibly rewriting)
-def writeWBLocation(locModel):
-    pass
+def writeWBLocation(locNdbModel):
+    locNdbModel.parent = locationAncestor()
+    locNdbModel.put()

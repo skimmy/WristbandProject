@@ -17,3 +17,11 @@ class WristbandLocation(object):
             self.longitude = msg.longitude
             self.accuracy = msg.accuracy
             self.timestamp = None
+
+    def toNdbModel(self):
+        ndbModel = ds.LocationDatastore(
+            wbid = self.wbid,
+            longitude = self.longitude,
+            latitude = self.latitude,
+            accuracy = self.accuracy )
+        return ndbModel

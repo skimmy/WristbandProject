@@ -12,6 +12,7 @@ from protorpc import remote
 import payment_messages as msg
 import location_messages as lmsg
 import request_parser as parser
+import location_request_parser as lparser
 
 import util.logutil as Log
 
@@ -94,6 +95,7 @@ class RemoteLocationService(remote.Service):
                       name="locationupdate")
     def location_update(self, request):
         Log.v(TAG, "LocationUpdate (" + request.tid + ")")
+        lparser.parseLocationUpdateMessage(request)
         OK = "Ok!"
         reply = lmsg.RemoteLocationOkMessage(tid = request.tid, wbid = request.wbid, info="KK")
 
