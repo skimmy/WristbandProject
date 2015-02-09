@@ -18,9 +18,13 @@ CURRENT_DATABASE_NAME = "default-db"
 
 # this is the name of the parent of all transactions in the datastore
 TRANSACTIONS_PARENT_NAME = "transactions"
+LOCATION_PARENT_NAME = "locations"
 
 def transactionAncestor():
     ndb.Key(TRANSACTIONS_PARENT_NAME, CURRENT_DATABASE_NAME)
+
+def locationAncestor():
+    ndb.Key(LOCATION_PARENT_NAME, CURRENT_DATABASE_NAME)
 
 
 def blocking_entity_group_query():
@@ -77,3 +81,10 @@ def recordCustomerRequestReceived(tKey):
     entity.put()
     return entity
         
+# takes a wristband id as input and returns the ds model for its location
+def readWBLocation(wbid):
+    entity
+
+# takes a wristband DS model and stores it into the DS (with possibly rewriting)
+def writeWBLocation(locModel):
+    pass

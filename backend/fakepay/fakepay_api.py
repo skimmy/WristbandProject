@@ -10,6 +10,7 @@ from protorpc import message_types
 from protorpc import remote
 
 import payment_messages as msg
+import location_messages as lmsg
 import request_parser as parser
 
 import util.logutil as Log
@@ -85,7 +86,19 @@ class PaymentRemoteService(remote.Service):
         # Here we can possibly log some information about the calls whenever they will be needed
         replyInfo = parser.parseTransactionInfo(request)
         return replyInfo
+
+@endpoints.api(name="locationremote", version="0.1")
+class RemoteLocationService(remote.Service):
+    @endpoints.method(lmsg.RemoteLocationUpdateMessage, lmsg.RemoteLocationOkMessage,
+                      path="locupdate", http_method=HTTP_DEFAULT_METHOD,
+                      name="locationupdate")
+    def location_update(self, request):
+        Log.v(TAG, "LocationUpdate (" + request.tid + ")")
+        OK = "Ok!"
+        reply = lmsg.RemoteLocationOkMessage(tid = request.tid, wbid = request.wbid, info="KK")
+
+        return reply
     
 
 # run all the services
-APPLICATION = endpoints.api_server([PaymentRemoteService])
+APPLICATION = endpoints.api_server([PaymentRemoteService, RemoteLocationService])

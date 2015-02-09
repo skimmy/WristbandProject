@@ -1,4 +1,4 @@
-"""This module contains all the messages definition to be used by Google Cloud Endpoints service"""
+"""This module contains all the messages definition to be used by Google Cloud Endpoints service for the remote payment"""
 
 from protorpc import messages
 

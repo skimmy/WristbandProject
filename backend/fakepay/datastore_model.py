@@ -12,3 +12,12 @@ class PaymentDetailDatastore(ndb.Model):
     amount = ndb.FloatProperty()
     purchaseType = ndb.IntegerProperty()
     transactionState = ndb.IntegerProperty()
+
+
+class LocationDatastore(ndb.Model):
+    tid = ndb.StringProperty()
+    wbid = ndb.StringProperty()
+    longitude = ndb.FloatProperty()
+    latitude = ndb.FloatProperty()
+    accuracy = ndb.FloatProperty()
+    timestamp = ndb.DateTimeProperty(auto_now=True)
