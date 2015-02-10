@@ -1,6 +1,8 @@
 import datastore_model as dsm
 import datastore_helper as dsh
 import location_model as model
+import gcm_helper as gcm
+
 
 TAG = "LocationRequestParser"
 
@@ -22,4 +24,5 @@ def parseLocationUpdateMessage(msg):
     # store back the refreshed location on the DS
     dsh.writeWBLocation(wblocation)
     # send message to the tutor
+    gcm.gcm_send_location(locModel)
 
