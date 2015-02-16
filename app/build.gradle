@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    compile "com.google.android.gms:play-services:3.1.+"
     compile 'com.android.support:appcompat-v7:19.+'
     // Play Services will validate the application prior to allowing OAuth2 access.
     //compile(group: 'com.google.android.gms', name: 'play-services', version: 'latest')
@@ -53,10 +54,7 @@ dependencies {
     // This will automatically include play services as long as you have download that library
     // from the Android SDK manager.
     // Add the Android extensions for the Google API client library.
-    compile('com.google.api-client:google-api-client-android:1.17.0-rc') {
-        // Exclude play services, since we're not using this yet.
-        exclude(group: 'com.google.android.google-play-services', module: 'google-play-services')
-    }
+    compile('com.google.api-client:google-api-client-android:1.17.0-rc')
     // Android extensions for Google HTTP Client.
     compile('com.google.http-client:google-http-client-android:1.17.0-rc') {
         exclude(group: 'com.google.android', module: 'android')

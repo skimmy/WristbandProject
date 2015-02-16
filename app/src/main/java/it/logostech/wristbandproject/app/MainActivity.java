@@ -12,6 +12,7 @@ import android.widget.Button;
 import it.logostech.wristbandproject.app.debug.WebServiceDebugActivity;
 import it.logostech.wristbandproject.app.nfc.NfcUtil;
 import it.logostech.wristbandproject.app.util.DeviceUtil;
+import it.logostech.wristbandproject.app.util.GooglePlayUtil;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -21,6 +22,7 @@ public class MainActivity extends ActionBarActivity {
     // this indicates whether or not 'HCE' is available on the current device
     // (true by default and set to false if the CardEmulation instantiation fails)
     private boolean hceAvailable = true;
+    private boolean playServicesAvail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,13 @@ public class MainActivity extends ActionBarActivity {
                 this.hceAvailable = false;
             }
         }
+
+        // check availability of Google Play Services (used for location updating via GCM)
+        playServicesAvail = GooglePlayUtil.arePlayServicesAvailable(this);
+        if (!playServicesAvail) {
+            Log.e(TAG, "Play Services not available");
+        }
+
 
         // Start the wireless activity
         Button wirelessActivityButton = (Button) findViewById(R.id.wirelessActivityButton);
