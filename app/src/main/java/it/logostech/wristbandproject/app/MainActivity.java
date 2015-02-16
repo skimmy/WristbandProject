@@ -1,6 +1,9 @@
 package it.logostech.wristbandproject.app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -8,6 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import java.io.IOException;
 
 import it.logostech.wristbandproject.app.debug.WebServiceDebugActivity;
 import it.logostech.wristbandproject.app.nfc.NfcUtil;
@@ -17,17 +24,35 @@ import it.logostech.wristbandproject.app.util.GooglePlayUtil;
 
 public class MainActivity extends ActionBarActivity {
 
+    // Shared preferences variables
+    /**
+     * The ID used in the SharedPreferences to store the registration id
+     */
+    private final String SP_REG_ID_KEY = "registration_id";
+    private final String SP_APP_VERSION = "app_version";
+    private String gcmRegistrationId;
+    private int appVersion;
+
+    private static final String SENDER_ID = "465547598275";
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
     // this indicates whether or not 'HCE' is available on the current device
     // (true by default and set to false if the CardEmulation instantiation fails)
     private boolean hceAvailable = true;
+    // this indicates whether Google Play Services library is available
     private boolean playServicesAvail;
+
+    // Google Cloud Messaging object, null until a good one is obtained from the
+    // Playe Services library
+    private GoogleCloudMessaging gcm = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // load shared preferences
+        this.loadSharedPreferences();
 
         // check (eventually forcing) default service for AID
         String aid = getResources().getString(R.string.nfcAID);
@@ -51,6 +76,16 @@ public class MainActivity extends ActionBarActivity {
         if (!playServicesAvail) {
             Log.e(TAG, "Play Services not available");
         }
+        // construct registration ID for GCM
+        int currentAppVersion = DeviceUtil.getAppVersion(this);
+        // renew registration id if code changes
+        if (this.appVersion != currentAppVersion) {
+            this.gcmRegistrationId = "";
+        }
+        if (this.gcmRegistrationId.isEmpty()) {
+           this.registrationIdRequestBackground();
+        }
+        this.appVersion = currentAppVersion;
 
 
         // Start the wireless activity
@@ -112,7 +147,8 @@ public class MainActivity extends ActionBarActivity {
             });
         }
 
-
+        // many preferences may have changed so we save them all here
+        this.saveSharedPreferences();
     }
 
     @Override
@@ -124,7 +160,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
+        this.saveSharedPreferences();
     }
 
     @Override
@@ -141,5 +177,43 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
+    }
+
+    private void loadSharedPreferences() {
+        SharedPreferences sp = getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        gcmRegistrationId = sp.getString(SP_REG_ID_KEY, "");
+        appVersion = sp.getInt(SP_APP_VERSION, -1);
+        Log.v(TAG, "GCM Registration Id: " + this.gcmRegistrationId);
+        Log.v(TAG, "App version: " + this.appVersion);
+    }
+
+    private void saveSharedPreferences() {
+        SharedPreferences sp = getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor spEdit = sp.edit();
+        spEdit.putString(SP_REG_ID_KEY, this.gcmRegistrationId);
+        spEdit.putInt(SP_APP_VERSION, this.appVersion);
+        spEdit.commit();
+    }
+
+    private void registrationIdRequestBackground() {
+        new AsyncTask() {
+
+            @Override
+            protected Object doInBackground(Object[] params) {
+                if (gcm == null) {
+                    gcm = GooglePlayUtil.getGcmInstance(MainActivity.this);
+                }
+                try {
+                    gcmRegistrationId = gcm.register(SENDER_ID);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Unable to register to GCM: " + e.getCause());
+                    gcmRegistrationId = "";
+                }
+                Log.v(TAG, "Current GCM registration id: " + gcmRegistrationId);
+                saveSharedPreferences();
+                return ("Registration ID: " + gcmRegistrationId);
+            }
+        }.execute(null, null, null);
     }
 }
