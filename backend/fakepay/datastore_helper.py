@@ -81,9 +81,29 @@ def recordCustomerRequestReceived(tKey):
     entity.put()
     return entity
 
-def storeRegIdForWB(ndbRegisteredTutor):
-    lAncestor = locationAncestor()
-    ndbRegisteredTutor.put()
+# retrieved the entitity with the given <tutor, wristband> pair, is such an entity
+# doesn't exist the function returns None
+def retrieveRegistrationFor(tutor, wb):
+    query = dsm.RegisteredTutor.query(
+        dsm.RegisteredTutor.tutid == tutor,
+        dsm.RegisteredTutor.wbid == wb
+        ).iter()
+    if (not query.has_next()):
+        return None
+    else:
+        return query.next()
+    
+
+# Register a new tutor for receiving location updates unless the pair 
+# <tutor,wristband> isn't already registered on the datastore in which case the
+# registration id is refreshed
+def storeRegIdForWB(ndbReg):
+    regEntity = retrieveRegistrationFor(ndbReg.tutid, ndbReg.wbid)
+    if (regEntity != None):
+        regEntity.regid = ndbReg.regid
+    else:
+        regEntity = ndbReg
+    regEntity.put()
     
         
 # takes a wristband id as input and returns the ds model for its location
