@@ -46,5 +46,23 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/wsDebugActivityButton"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/locationActivityButton">
+            <Button
+                android:id="@+id/locationModeToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Toggle Mode"
+                />
+            <TextView
+                android:id="@+id/locationModeTextView"
+                android:text="@string/tutor_string"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
 
 </RelativeLayout>

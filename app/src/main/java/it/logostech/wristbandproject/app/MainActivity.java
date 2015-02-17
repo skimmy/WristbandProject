@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -30,6 +32,7 @@ public class MainActivity extends ActionBarActivity {
      */
     private final String SP_REG_ID_KEY = "registration_id";
     private final String SP_APP_VERSION = "app_version";
+    private final String SP_LOCATION_MODE = "location_mode";
     private String gcmRegistrationId;
     private int appVersion;
 
@@ -44,8 +47,13 @@ public class MainActivity extends ActionBarActivity {
     private boolean playServicesAvail;
 
     // Google Cloud Messaging object, null until a good one is obtained from the
-    // Playe Services library
+    // Play Services library
     private GoogleCloudMessaging gcm = null;
+
+    // variables to indicate whether device is acting as tutor or wristband for
+    // what concerns the location monitoring system
+    private int locationOperationalMode = LocationActivity.LOCATION_MODE_TUTOR;
+    private Button locationModeToogleButton = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +61,9 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         // load shared preferences
         this.loadSharedPreferences();
+
+        // adjust location mode between Tutor and Wristband (based on shared preferences)
+        this.adjustLocationMode();
 
         // check (eventually forcing) default service for AID
         String aid = getResources().getString(R.string.nfcAID);
@@ -142,6 +153,7 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, LocationActivity.class);
+                    intent.putExtra(LocationActivity.LOCATION_MODE_NAME, locationOperationalMode);
                     startActivity(intent);
                 }
             });
@@ -179,12 +191,38 @@ public class MainActivity extends ActionBarActivity {
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
+    private void adjustLocationMode() {
+        Button locationToggleButton =  this.locationModeToogleButton =
+                (Button) findViewById(R.id.locationModeToggleButton);
+        locationToggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locationOperationalMode =
+                        (locationOperationalMode == 0) ?
+                                LocationActivity.LOCATION_MODE_WRISTBAND :
+                                LocationActivity.LOCATION_MODE_TUTOR;
+                refreshLocationModeTextView();
+            }
+        });
+        refreshLocationModeTextView();
+    }
+
+    private void refreshLocationModeTextView() {
+        TextView locationModeTextView =
+                (TextView) findViewById(R.id.locationModeTextView);
+        locationModeTextView.setText(
+                (this.locationOperationalMode == 0) ?
+                        R.string.tutor_string : R.string.wristband_string );
+    }
+
     private void loadSharedPreferences() {
         SharedPreferences sp = getSharedPreferences(TAG, Context.MODE_PRIVATE);
         gcmRegistrationId = sp.getString(SP_REG_ID_KEY, "");
         appVersion = sp.getInt(SP_APP_VERSION, -1);
+        this.locationOperationalMode = sp.getInt(SP_LOCATION_MODE, 0);
         Log.v(TAG, "GCM Registration Id: " + this.gcmRegistrationId);
         Log.v(TAG, "App version: " + this.appVersion);
+        Log.v(TAG, "Location mode: " + this.locationOperationalMode);
     }
 
     private void saveSharedPreferences() {
@@ -192,6 +230,7 @@ public class MainActivity extends ActionBarActivity {
         SharedPreferences.Editor spEdit = sp.edit();
         spEdit.putString(SP_REG_ID_KEY, this.gcmRegistrationId);
         spEdit.putInt(SP_APP_VERSION, this.appVersion);
+        spEdit.putInt(SP_LOCATION_MODE, this.locationOperationalMode);
         spEdit.commit();
     }
 

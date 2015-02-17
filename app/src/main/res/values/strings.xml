@@ -14,6 +14,8 @@
     <string name="send_text">Send</string>
     <string name="start_text">Start</string>
     <string name="stop_text">Stop</string>
+    <string name="tutor_string">Tutor</string>
+    <string name="wristband_string">Wristband</string>
 
     <!-- Web Service Debug Activity -->
     <string name="ws_debug_text">Web Service Debug</string>
@@ -45,5 +47,6 @@
     <string name="reset_string">Reset</string>
     <string name="location_button_name">Location</string>
     <string name="title_activity_location">LocationActivity</string>
+
 
 </resources>

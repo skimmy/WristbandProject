@@ -1,5 +1,6 @@
 package it.logostech.wristbandproject.app;
 
+import android.content.Intent;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -22,16 +23,26 @@ import it.logostech.wristbandproject.app.util.DeviceUtil;
  */
 public class LocationActivity extends ActionBarActivity {
 
+    public static final String LOCATION_MODE_NAME = "LocationMode";
+    public static final int LOCATION_MODE_TUTOR = 0;
+    public static final int LOCATION_MODE_WRISTBAND = 1;
+
     public static final String TAG = LocationActivity.class.getSimpleName();
 
     private boolean monitoring = true;
     private MonitorLocationListener locationListener = null;
+
+    private int locationMode = LOCATION_MODE_TUTOR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
+
+        // get location mode from invocation intent
+        Intent intent = getIntent();
+        this.locationMode = intent.getIntExtra(LOCATION_MODE_NAME, LOCATION_MODE_TUTOR);
 
         // when the activity is first created, location updates are always enabled
         this.locationListener = new MonitorLocationListener(this);
