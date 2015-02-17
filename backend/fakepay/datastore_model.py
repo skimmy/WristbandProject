@@ -20,3 +20,9 @@ class LocationDatastore(ndb.Model):
     latitude = ndb.FloatProperty()
     accuracy = ndb.FloatProperty()
     timestamp = ndb.DateTimeProperty(auto_now=True)
+
+
+class RegisteredTutor(ndb.Model):
+    tutid = ndb.StringProperty()
+    wbid = ndb.StringProperty()
+    regid = ndb.StringProperty()

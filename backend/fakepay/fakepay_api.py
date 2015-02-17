@@ -98,7 +98,18 @@ class RemoteLocationService(remote.Service):
         lparser.parseLocationUpdateMessage(request)
         OK = "Ok!"
         reply = lmsg.RemoteLocationOkMessage(tid = request.tid, wbid = request.wbid, info="KK")
+        return reply
 
+    @endpoints.method(lmsg.RemoteLocationRegisterTutor, lmsg.RemoteLocationOkMessage,
+                      path="regtutor", http_method=HTTP_DEFAULT_METHOD,
+                      name="registertutor")
+    def register_tutor(self, request):
+        lparser.parseRegisterTutorMessage(request)
+        reply = lmsg.RemoteLocationOkMessage(
+            tid = request.tutid,
+            wbid = request.wbid,
+            info = "Tutor registered. Ok!"
+            )
         return reply
     
 

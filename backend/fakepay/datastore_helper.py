@@ -80,6 +80,11 @@ def recordCustomerRequestReceived(tKey):
         entity.transactionState = pm.TS_FULL_REQUEST
     entity.put()
     return entity
+
+def storeRegIdForWB(ndbRegisteredTutor):
+    lAncestor = locationAncestor()
+    ndbRegisteredTutor.put()
+    
         
 # takes a wristband id as input and returns the ds model for its location
 def readWBLocation(wbid):

@@ -17,3 +17,9 @@ class RemoteLocationUpdateMessage(messages.Message):
     latitude = messages.FloatField(3, required=True)
     longitude = messages.FloatField(4, required=True)
     accuracy = messages.FloatField(5, default=0.0)
+
+class RemoteLocationRegisterTutor(messages.Message):
+    """Message used by the tutor to register for a wristband updates"""
+    tutid = messages.StringField(1, required=True)
+    wbid = messages.StringField(2, required=True)
+    gcmRegId = messages.StringField(3, required=True)

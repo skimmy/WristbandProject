@@ -25,3 +25,4 @@ class WristbandLocation(object):
             latitude = self.latitude,
             accuracy = self.accuracy )
         return ndbModel
+

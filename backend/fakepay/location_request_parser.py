@@ -26,3 +26,13 @@ def parseLocationUpdateMessage(msg):
     # send message to the tutor
     gcm.gcm_send_location(locModel)
 
+
+def parseRegisterTutorMessage(msg):
+    # create the model...
+    dsModel = dsm.RegisteredTutor(
+        tutid = msg.tutid,
+        wbid = msg.wbid,
+        regid = msg.gcmRegId
+        )
+    # ...and store id
+    dsh.storeRegIdForWB(dsModel)
