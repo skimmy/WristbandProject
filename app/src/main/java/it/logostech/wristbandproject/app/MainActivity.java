@@ -18,6 +18,8 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 
+import it.logostech.wristbandproject.app.backend.RemoteLocationWS;
+import it.logostech.wristbandproject.app.deamons.WristbandMonitorDaemon;
 import it.logostech.wristbandproject.app.debug.WebServiceDebugActivity;
 import it.logostech.wristbandproject.app.nfc.NfcUtil;
 import it.logostech.wristbandproject.app.util.DeviceUtil;
@@ -55,6 +57,8 @@ public class MainActivity extends ActionBarActivity {
     private int locationOperationalMode = LocationActivity.LOCATION_MODE_TUTOR;
     private Button locationModeToogleButton = null;
 
+    Thread wbMonitorThread = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +68,8 @@ public class MainActivity extends ActionBarActivity {
 
         // adjust location mode between Tutor and Wristband (based on shared preferences)
         this.adjustLocationMode();
+        this.wbMonitorThread = new Thread(WristbandMonitorDaemon.DAEMON);
+        this.wbMonitorThread.start();
 
         // check (eventually forcing) default service for AID
         String aid = getResources().getString(R.string.nfcAID);
@@ -95,8 +101,11 @@ public class MainActivity extends ActionBarActivity {
         }
         if (this.gcmRegistrationId.isEmpty()) {
            this.registrationIdRequestBackground();
+        } else {
+            WristbandMonitorDaemon.DAEMON.setGcmRegistrationId(this.gcmRegistrationId);
         }
         this.appVersion = currentAppVersion;
+
 
 
         // Start the wireless activity
@@ -172,6 +181,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        RemoteLocationWS.freeService();
         this.saveSharedPreferences();
     }
 
@@ -251,6 +261,8 @@ public class MainActivity extends ActionBarActivity {
                 }
                 Log.v(TAG, "Current GCM registration id: " + gcmRegistrationId);
                 saveSharedPreferences();
+                WristbandMonitorDaemon.DAEMON.setGcmRegistrationId(gcmRegistrationId);
+
                 return ("Registration ID: " + gcmRegistrationId);
             }
         }.execute(null, null, null);
