@@ -2,6 +2,11 @@ package it.logostech.wristbandproject.app;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Bundle;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import it.logostech.wristbandproject.app.util.GooglePlayUtil;
 
 /**
  * @author Michele Schimd
@@ -19,6 +24,8 @@ public class GcmIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
+        Bundle extras = intent.getExtras();
+        GoogleCloudMessaging gcm = GooglePlayUtil.getGcmInstance(this);
+        String messageType = gcm.getMessageType(intent);
     }
 }
