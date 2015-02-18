@@ -23,8 +23,12 @@ def parseLocationUpdateMessage(msg):
         wblocation.accuracy = locModel.accuracy
     # store back the refreshed location on the DS
     dsh.writeWBLocation(wblocation)
+    # retrieve all registration ids for the current wristband
+    regIds = dsh.regIdsForWB(wbid)
+    ids = [reg.regid for reg in regIds]
+    print (ids)
     # send message to the tutor
-    gcm.gcm_send_location(locModel)
+    gcm.gcm_send_location(locModel, ids)
 
 
 def parseRegisterTutorMessage(msg):

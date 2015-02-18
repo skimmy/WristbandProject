@@ -36,13 +36,13 @@ def sendGcmMessage(header, data):
     print(repr(req))
     try:
         reply = urllib2.urlopen(req)
-        print(repr(reply))
+        print("[REPLY] " + repr(reply.read()))
     except urllib2.URLError, e:
-        print(repr(e.reason))
+        print("[ERROR] " + repr(e.reason))
 
-def gcm_send_location(locModel):
+def gcm_send_location(locModel, regIds):
     header = getHttpRequestHeader()
-    data = getHttpRequestData(locModel, [REGISTRATION_ID])
+    data = getHttpRequestData(locModel, regIds)
 #    print ("[HEADER] " + str(header))
 #    print ("[DATA]   " + str(data))
     sendGcmMessage(header,data)

@@ -104,6 +104,13 @@ def storeRegIdForWB(ndbReg):
     else:
         regEntity = ndbReg
     regEntity.put()
+
+# Returns all the 
+def regIdsForWB(wb):
+    registrations = dsm.RegisteredTutor.query(
+        dsm.RegisteredTutor.wbid == wb).iter()
+    return registrations
+    
     
         
 # takes a wristband id as input and returns the ds model for its location
