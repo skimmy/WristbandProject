@@ -3,6 +3,7 @@ package it.logostech.wristbandproject.app;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -27,5 +28,12 @@ public class GcmIntentService extends IntentService {
         Bundle extras = intent.getExtras();
         GoogleCloudMessaging gcm = GooglePlayUtil.getGcmInstance(this);
         String messageType = gcm.getMessageType(intent);
+        if (messageType == GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE) {
+            Log.v(TAG, "New GCM message " + extras.get("content") + " (" + extras.get("latitude")
+                    + "," + extras.get("longitude") + ")");
+        } else {
+            Log.v(TAG, "Message Type is: " + messageType);
+        }
+        GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 }

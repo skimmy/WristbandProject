@@ -26,14 +26,17 @@ def getHttpRequestData(locModel, regIds):
     data = {
 #    "registration_ids" : ("[ " + (", ".join(regIds)) + " ]")
         "registration_ids" :  regIds,
-        "latitude" : str(locModel.latitude),
-        "longitude" : str(locModel.longitude)
+        "data" : {
+            "content" : "update",
+            "latitude" : str(locModel.latitude),
+            "longitude" : str(locModel.longitude)
+        }
      }
     return json.dumps(data)
 
 def sendGcmMessage(header, data):
     req = urllib2.Request(HTTP_SERVER_URL,  data, header)
-    print(repr(req))
+    print("[DATA] " + str(data))
     try:
         reply = urllib2.urlopen(req)
         print("[REPLY] " + repr(reply.read()))
