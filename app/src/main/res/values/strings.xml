@@ -47,6 +47,8 @@
     <string name="reset_string">Reset</string>
     <string name="location_button_name">Location</string>
     <string name="title_activity_location">LocationActivity</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="map_text">Map</string>
 
 
 </resources>

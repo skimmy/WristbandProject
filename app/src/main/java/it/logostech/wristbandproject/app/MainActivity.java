@@ -168,6 +168,15 @@ public class MainActivity extends ActionBarActivity {
             });
         }
 
+        Button mapActivityButton = (Button) findViewById(R.id.mapActivityButton);
+        mapActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                startActivity(intent);
+            }
+        });
+
         // many preferences may have changed so we save them all here
         this.saveSharedPreferences();
     }

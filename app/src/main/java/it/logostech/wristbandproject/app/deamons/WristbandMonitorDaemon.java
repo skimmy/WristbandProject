@@ -3,10 +3,12 @@ package it.logostech.wristbandproject.app.deamons;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import it.logostech.wristbandproject.app.backend.RemoteLocationWS;
 
 /**
- * This class represents the daemon that runsto monitoring the remote wristband
+ * This class represents the daemon that runs to monitoring the remote wristband
  *
  * @author Michele Schimd
  * @version 1.0
@@ -18,9 +20,11 @@ public class WristbandMonitorDaemon implements Runnable {
 
     public static final WristbandMonitorDaemon DAEMON = new WristbandMonitorDaemon();
 
+
     // 0: waiting for reg id, 1: reg id available registration needed, 2: registered
     private int registration = 0;
     private String gcmRegistrationId = null;
+    private LatLng lastPosition = null;
 
     private WristbandMonitorDaemon() {
 
@@ -45,12 +49,21 @@ public class WristbandMonitorDaemon implements Runnable {
                             registerForUpdate(tutorId, wbId, this.gcmRegistrationId);
                     registration = 2;
                 }
-                Thread.sleep(100);
+
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 Log.v(TAG, "Monitoring daemon interrupted");
                 // TODO: Add here whatever is needed to stop monitoring daemon
                 return;
             }
         }
+    }
+
+    public LatLng getLastPosition() {
+        return lastPosition;
+    }
+
+    public void setLastPosition(LatLng lastPosition) {
+        this.lastPosition = lastPosition;
     }
 }

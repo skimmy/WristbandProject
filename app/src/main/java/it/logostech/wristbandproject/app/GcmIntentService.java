@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.maps.model.LatLng;
 
+import it.logostech.wristbandproject.app.deamons.WristbandMonitorDaemon;
 import it.logostech.wristbandproject.app.util.GooglePlayUtil;
 
 /**
@@ -29,8 +31,14 @@ public class GcmIntentService extends IntentService {
         GoogleCloudMessaging gcm = GooglePlayUtil.getGcmInstance(this);
         String messageType = gcm.getMessageType(intent);
         if (messageType == GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE) {
+
             Log.v(TAG, "New GCM message " + extras.get("content") + " (" + extras.get("latitude")
                     + "," + extras.get("longitude") + ")");
+            // TODO: Add check for content type to make sure it is a good position
+            Double lat = Double.valueOf(extras.getString("latitude"));
+            Double lon = Double.valueOf(extras.getString("longitude"));
+            WristbandMonitorDaemon.DAEMON.setLastPosition(new LatLng(lat, lon));
+
         } else {
             Log.v(TAG, "Message Type is: " + messageType);
         }

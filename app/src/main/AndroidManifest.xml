@@ -6,6 +6,7 @@
 
     <!-- Basic permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- Wifi State Permission -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -27,7 +28,9 @@
     <uses-feature android:name="android.hardware.nfc.hce" />
     <uses-feature android:name="android.hardware.FEATURE_NFC_HOST_CARD_EMULATION" />
 
-
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -109,14 +112,30 @@
         </activity>
 
         <!-- GCM Related components -->
-        <receiver android:name=".GcmBroadcastReceiver"
+        <receiver
+            android:name=".GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.example.gcm" />
             </intent-filter>
         </receiver>
+
         <service android:name=".GcmIntentService" />
+
+        <!-- Google Maps related meta-data -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCHrxBamHrA_YkoCBm4WK6mRqGungOr7gk" />
+
+        <activity
+            android:name=".MapActivity"
+            android:label="@string/title_activity_map" >
+        </activity>
     </application>
 
 </manifest>
