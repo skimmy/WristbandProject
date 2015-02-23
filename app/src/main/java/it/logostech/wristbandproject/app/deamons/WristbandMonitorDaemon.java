@@ -1,9 +1,14 @@
 package it.logostech.wristbandproject.app.deamons;
 
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 import it.logostech.wristbandproject.app.backend.RemoteLocationWS;
 
@@ -25,6 +30,9 @@ public class WristbandMonitorDaemon implements Runnable {
     private int registration = 0;
     private String gcmRegistrationId = null;
     private LatLng lastPosition = null;
+
+    // queue of handlers to be notified
+    Queue<Handler> handlersQueue = new LinkedList<Handler>();
 
     private WristbandMonitorDaemon() {
 
@@ -65,5 +73,19 @@ public class WristbandMonitorDaemon implements Runnable {
 
     public void setLastPosition(LatLng lastPosition) {
         this.lastPosition = lastPosition;
+        for (Handler h : this.handlersQueue) {
+            Message msg = new Message();
+            msg.obj = this.getLastPosition();
+            h.sendMessage(msg);
+        }
     }
+
+    public void addHandler(Handler handler) {
+        this.handlersQueue.add(handler);
+    }
+
+    public void removeHandler(Handler handler) {
+        this.handlersQueue.remove(handler);
+    }
+
 }
