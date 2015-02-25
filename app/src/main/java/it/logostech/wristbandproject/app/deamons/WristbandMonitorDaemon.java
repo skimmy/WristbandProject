@@ -82,6 +82,12 @@ public class WristbandMonitorDaemon implements Runnable {
 
     public void addHandler(Handler handler) {
         this.handlersQueue.add(handler);
+        // every time we add an handler we also send to it the latest position.
+        // This should guarantee that maps are always up-to-date (not a very
+        // good design pattern though)stio
+        Message msg = new Message();
+        msg.obj = this.getLastPosition();
+        handler.sendMessage(msg);
     }
 
     public void removeHandler(Handler handler) {

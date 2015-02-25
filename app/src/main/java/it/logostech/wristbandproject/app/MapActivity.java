@@ -45,7 +45,6 @@ public class MapActivity extends Activity implements OnMapReadyCallback {
         super.onResume();
         if (this.positionHandler != null) {
             WristbandMonitorDaemon.DAEMON.addHandler(this.positionHandler);
-
         }
     }
 

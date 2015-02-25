@@ -17,6 +17,10 @@
     <string name="tutor_string">Tutor</string>
     <string name="wristband_string">Wristband</string>
 
+    <!-- Notification strings -->
+    <string name="alert_notification_title">Trespass Alert!</string>
+
+
     <!-- Web Service Debug Activity -->
     <string name="ws_debug_text">Web Service Debug</string>
 

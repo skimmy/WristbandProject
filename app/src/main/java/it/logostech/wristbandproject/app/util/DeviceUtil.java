@@ -1,5 +1,7 @@
 package it.logostech.wristbandproject.app.util;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -56,6 +58,10 @@ public class DeviceUtil {
         return (Vibrator) ctx.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
-
+    public static void addNotification(Context ctx, Notification notification, int notificationId) {
+        NotificationManager nManager =
+                (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        nManager.notify(notificationId, notification);
+    }
 
 }
