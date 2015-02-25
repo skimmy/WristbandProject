@@ -130,3 +130,7 @@ def readWBLocation(wbid):
 def writeWBLocation(locNdbModel):
     locNdbModel.parent = locationAncestor()
     locNdbModel.put()
+
+# adds a fence to a wristband
+def addFenceToWristband(fenceModel):
+    fenceModel.put()

@@ -111,6 +111,19 @@ class RemoteLocationService(remote.Service):
             info = "Tutor registered. Ok!"
             )
         return reply
+
+    @endpoints.method(lmsg.RemoteLocationWristbandFence, lmsg.RemoteLocationOkMessage,
+                      path="addfence", http_method=HTTP_DEFAULT_METHOD,
+                      name="addfence")
+    def add_fence(self, request):
+        lparser.parseAddFenceMessage(request)
+        reply = lmsg.RemoteLocationOkMessage(
+            tid="",
+            wbid = request.wbid,
+            info = "Fence added. Ok!"
+            )
+        return reply
+        
     
 
 # run all the services

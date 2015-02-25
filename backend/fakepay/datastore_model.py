@@ -13,7 +13,7 @@ class PaymentDetailDatastore(ndb.Model):
     purchaseType = ndb.IntegerProperty()
     transactionState = ndb.IntegerProperty()
 
-
+"""Class to store location (i.e., latitude and longitude) of a wristband """
 class LocationDatastore(ndb.Model):
     wbid = ndb.StringProperty()
     longitude = ndb.FloatProperty()
@@ -21,8 +21,15 @@ class LocationDatastore(ndb.Model):
     accuracy = ndb.FloatProperty()
     timestamp = ndb.DateTimeProperty(auto_now=True)
 
-
+"""Class to store a registered tutor that will receive GCM messages for wristband position update"""
 class RegisteredTutor(ndb.Model):
     tutid = ndb.StringProperty()
     wbid = ndb.StringProperty()
     regid = ndb.StringProperty()
+
+
+class WristbandFence(ndb.Model):
+    wbid = ndb.StringProperty()
+    longitude = ndb.FloatProperty()
+    latitude = ndb.FloatProperty()
+    radius = ndb.FloatProperty()

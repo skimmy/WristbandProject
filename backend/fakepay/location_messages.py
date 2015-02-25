@@ -23,3 +23,10 @@ class RemoteLocationRegisterTutor(messages.Message):
     tutid = messages.StringField(1, required=True)
     wbid = messages.StringField(2, required=True)
     gcmRegId = messages.StringField(3, required=True)
+
+class RemoteLocationWristbandFence(messages.Message):
+    """Message used to describe fence for wristbands"""
+    wbid = messages.StringField(1, required=True)
+    latitude = messages.FloatField(2, required=True)
+    longitude = messages.FloatField(3, required=True)
+    radius = messages.FloatField(4, required=True)

@@ -40,3 +40,12 @@ def parseRegisterTutorMessage(msg):
         )
     # ...and store id
     dsh.storeRegIdForWB(dsModel)
+
+def parseAddFenceMessage(msg):
+    dsModel = dsm.WristbandFence(
+        wbid = msg.wbid,
+        longitude = msg.longitude,
+        latitude = msg.latitude,
+        radius = msg.radius
+        )
+    dsh.addFenceToWristband(dsModel)
