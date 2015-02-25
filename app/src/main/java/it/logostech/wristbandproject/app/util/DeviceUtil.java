@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.os.Vibrator;
 import android.util.Log;
 
 /**
@@ -45,6 +46,16 @@ public class DeviceUtil {
         }
         return packageInfo.versionCode;
     }
+
+    public static boolean isVibrationAvailable(Context ctx) {
+        Object service = ctx.getSystemService(Context.VIBRATOR_SERVICE);
+        return (service != null);
+    }
+
+    public static Vibrator getVibrator(Context ctx) {
+        return (Vibrator) ctx.getSystemService(Context.VIBRATOR_SERVICE);
+    }
+
 
 
 }

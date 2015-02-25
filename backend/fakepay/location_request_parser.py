@@ -30,10 +30,12 @@ def parseLocationUpdateMessage(msg):
     # 1. retieve the fences for current wb
     fences = dsh.getFencesForWristband(wbid)
     # 2. check if new location violate fences
+    violatedFences = []
     if (fences != None):
         violatedFences = fencing.checkFences(wblocation, fences)
     # 3. generate alarms
-    alarms = [str(fences[i]) for i in violatedFences]
+    #    alarms = [str(fences[i]) for i in violatedFences]
+    alarms = str(len(violatedFences))
     # retrieve all registration ids for the current wristband
     regIds = dsh.regIdsForWB(wbid)
     ids = [reg.regid for reg in regIds]
