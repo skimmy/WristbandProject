@@ -22,14 +22,15 @@ def getHttpRequestHeader():
         }
     return hds
 
-def getHttpRequestData(locModel, regIds):
+def getHttpRequestData(locModel, regIds, alarms):
     data = {
 #    "registration_ids" : ("[ " + (", ".join(regIds)) + " ]")
         "registration_ids" :  regIds,
         "data" : {
             "content" : "update",
             "latitude" : str(locModel.latitude),
-            "longitude" : str(locModel.longitude)
+            "longitude" : str(locModel.longitude),
+            "alarms" : alarms
         }
      }
     return json.dumps(data)
@@ -43,9 +44,9 @@ def sendGcmMessage(header, data):
     except urllib2.URLError, e:
         print("[ERROR] " + repr(e.reason))
 
-def gcm_send_location(locModel, regIds):
+def gcm_send_location(locModel, regIds, alarms):
     header = getHttpRequestHeader()
-    data = getHttpRequestData(locModel, regIds)
+    data = getHttpRequestData(locModel, regIds, alarms)
 #    print ("[HEADER] " + str(header))
 #    print ("[DATA]   " + str(data))
     sendGcmMessage(header,data)

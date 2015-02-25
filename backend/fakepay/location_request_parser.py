@@ -3,6 +3,8 @@ import datastore_helper as dsh
 import location_model as model
 import gcm_helper as gcm
 
+import fencing
+
 
 TAG = "LocationRequestParser"
 
@@ -23,12 +25,21 @@ def parseLocationUpdateMessage(msg):
         wblocation.accuracy = locModel.accuracy
     # store back the refreshed location on the DS
     dsh.writeWBLocation(wblocation)
+
+    # check if new location is outside fences
+    # 1. retieve the fences for current wb
+    fences = dsh.getFencesForWristband(wbid)
+    # 2. check if new location violate fences
+    if (fences != None):
+        violatedFences = fencing.checkFences(wblocation, fences)
+    # 3. generate alarms
+    alarms = [str(fences[i]) for i in violatedFences]
     # retrieve all registration ids for the current wristband
     regIds = dsh.regIdsForWB(wbid)
     ids = [reg.regid for reg in regIds]
     print (ids)
     # send message to the tutor
-    gcm.gcm_send_location(locModel, ids)
+    gcm.gcm_send_location(locModel, ids, alarms)
 
 
 def parseRegisterTutorMessage(msg):

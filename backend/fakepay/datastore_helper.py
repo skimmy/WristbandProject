@@ -133,4 +133,21 @@ def writeWBLocation(locNdbModel):
 
 # adds a fence to a wristband
 def addFenceToWristband(fenceModel):
-    fenceModel.put()
+    storedModels = getFencesForWristband(fenceModel.wbid)
+    if storedModels == None:
+        fenceModel.put()
+    else:
+        storedModel = storedModels[0]
+        storedModel.latitude = fenceModel.latitude
+        storedModel.longitude = fenceModel.longitude
+        storedModel.radius = fenceModel.radius
+        storedModel.put()
+
+# retrives all 'WristbandFence' objects for the given wristband
+def getFencesForWristband(wbid):
+    retrievedFences = dsm.WristbandFence.query(
+        dsm.WristbandFence.wbid == wbid).iter()
+    if (not retrievedFences.has_next()):
+        return None
+    else:
+        return [x for x in retrievedFences]
